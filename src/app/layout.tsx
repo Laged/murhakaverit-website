@@ -26,7 +26,7 @@ const geistMono = Geist_Mono({
 });
 
 const NKL_DESCRIPTION =
-  "Tervetuloa tulevaisuuteen, jossa Eurooppa on pelastettu teknokratiaksi Kolmannen Maailmansodan raatelemasta yhteiskunnasta. Suomi on syntyvyyshoidon kärkimaa. Ensimmäinen valtio, jonka tekoälyhallitus AIH on saavuttanut EU:n hallinnollisen elimen EUAIB:n asettamat yhteiskuntatavotteet. Tavoitteet on optimoitu valtioittain noudattamaan kansan osoittamaa arvomaailmaa sekä historiaa ennen Kolmatta Maailmansotaa.";
+  "Tervetuloa tulevaisuuteen, jossa Eurooppa on pelastettu teknokratiaksi Kolmannen Maailmansodan raatelemasta yhteiskunnasta. Suomi on syntyvyyshoidon kärkimaa. Ensimmäinen valtio, jonka tekoälyhallitus AIH on saavuttanut EU:n hallinnollisen elimen EUAIB:n asettamat yhteiskuntatavotteet. Tavoitteet on optimoitu valtioittain noudattamaan kansan osoittamaa arvomaailmaa sekä historiaa ennen Kolmatta Maailmansotaa. Lue lisää NKL 2068-maailmasta sekä tämän Murhakaverit ry:n ensimmäisen Jubenshan hahmoista jo ennen peli-iltaasi!";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://murhakaverit.vercel.app"),

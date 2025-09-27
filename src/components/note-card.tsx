@@ -54,7 +54,8 @@ function extractMetadataFromContent(markdown: string): {
 
   const cleaned = withoutFields
     .replace(/\n{3,}/g, "\n\n")
-    .replace(/^\s+/, "");
+    .replace(/^\s+/, "")
+    .replace(/\s+$/, "");
 
   return {
     metadata,

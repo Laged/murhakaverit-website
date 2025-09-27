@@ -227,9 +227,11 @@ export function CombinedCard({ title, className = '', metadata }: CombinedCardPr
                   }
                 }
 
+                const label = key.replace(/_/g, " ");
+
                 return (
                   <span key={key} className="metadata-item">
-                    <strong>{`${key}:`}</strong>
+                    <strong>{`${label}:`}</strong>
                     <span>{displayValue}</span>
                   </span>
                 );

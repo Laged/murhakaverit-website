@@ -44,10 +44,26 @@ export default async function HomePage() {
     : undefined;
 
   const otherNotes = summaries.filter((summary) => summary.slug !== landingSummary?.slug);
+  const nextNote = otherNotes.at(0);
 
   return (
     <div className="flex flex-col gap-16">
-      {transformedLanding ? <NoteCard note={transformedLanding} /> : null}
+      {transformedLanding ? (
+        <div className="flex flex-col gap-6">
+          <NoteCard note={transformedLanding} />
+          {nextNote ? (
+            <div className="flex justify-end">
+              <Link
+                href={`/notes/${nextNote.slug}`}
+                className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-foreground transition hover:border-foreground/50"
+              >
+                Seuraava
+                <span aria-hidden>→</span>
+              </Link>
+            </div>
+          ) : null}
+        </div>
+      ) : null}
 
       <section id="notes" className="flex flex-col gap-6">
         <header className="flex flex-col gap-2">
