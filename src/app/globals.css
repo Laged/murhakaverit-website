@@ -1,0 +1,379 @@
+@import "tailwindcss";
+
+:root {
+  --gamma-surface: #0d0f14;
+  --gamma-ambient: #131a26;
+  --gamma-contrast: #f5f7ff;
+  --gamma-accent: #5ef2ff;
+  --gamma-grid: rgba(124, 162, 210, 0.16);
+  --gamma-glow: rgba(122, 245, 214, 0.65);
+  --keyword-character: #7dfcff;
+  --keyword-item: #ffb85c;
+  --keyword-evidence: #8d6bff;
+  --keyword-location: #54e38f;
+  --keyword-fact: #ffd36b;
+  --keyword-important: #ff5f8f;
+  --background: var(--gamma-surface);
+  --foreground: var(--gamma-contrast);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 6.5rem;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: var(--gamma-surface);
+    --foreground: var(--gamma-contrast);
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), "Work Sans", "Inter", "Segoe UI",
+    system-ui, -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+  font-size: clamp(1rem, 0.35vw + 1rem, 1.1rem);
+  line-height: 1.7;
+  letter-spacing: -0.01em;
+  text-rendering: optimizeLegibility;
+  background-image: radial-gradient(circle at 10% 10%, rgba(94, 242, 255, 0.08), transparent 55%),
+    radial-gradient(circle at 90% 20%, rgba(122, 245, 214, 0.08), transparent 60%);
+}
+
+.nav-scroll {
+  scrollbar-width: none;
+}
+
+.nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading), "Audiowide", "Work Sans", "Inter",
+    "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Helvetica,
+    Arial, sans-serif;
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 24px color-mix(in srgb, currentColor 30%, transparent);
+}
+
+.panel {
+  position: relative;
+  border: 2px solid transparent;
+  clip-path: polygon(
+    12px 0,
+    calc(100% - 12px) 0,
+    100% 12px,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    12px 100%,
+    0 calc(100% - 12px),
+    0 12px
+  );
+  background:
+    linear-gradient(
+        160deg,
+        rgba(94, 242, 255, 0.09),
+        transparent 55%
+      ),
+    color-mix(in srgb, var(--gamma-ambient) 90%, transparent);
+  background-clip: padding-box;
+  box-shadow: 0 18px 45px color-mix(in srgb, var(--foreground) 8%, transparent);
+  overflow: hidden;
+}
+
+.panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  border-radius: 0;
+  clip-path: polygon(
+    12px 0,
+    calc(100% - 12px) 0,
+    100% 12px,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    12px 100%,
+    0 calc(100% - 12px),
+    0 12px
+  );
+  filter: drop-shadow(0 0 22px rgba(255, 255, 255, 0.25));
+  pointer-events: none;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 18px 18px, var(--gamma-grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mix-blend-mode: screen;
+  opacity: 0.65;
+}
+
+.header-bar {
+  width: 100%;
+  background:
+    linear-gradient(120deg, rgba(94, 242, 255, 0.12) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(122, 245, 214, 0.1) 0%, transparent 55%),
+    var(--gamma-ambient);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  box-shadow: 0 12px 45px color-mix(in srgb, var(--foreground) 8%, transparent);
+  padding: clamp(1rem, 2vw, 1.25rem) clamp(1.15rem, 4vw, 2rem);
+  backdrop-filter: blur(18px);
+  background-color: color-mix(in srgb, var(--gamma-ambient) 65%, transparent);
+}
+
+.header-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 12px 12px, var(--gamma-grid) 1px, transparent 1px);
+  background-size: 26px 26px;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(1rem, 4vw, 2.5rem);
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.header-top::-webkit-scrollbar {
+  display: none;
+}
+
+.header-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(0.75rem, 3vw, 1.25rem);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--foreground);
+}
+
+.header-primary a {
+  transition: color 120ms ease;
+}
+
+.header-primary-divider {
+  color: color-mix(in srgb, var(--foreground) 40%, transparent);
+}
+
+.header-secondary {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(0.6rem, 2vw, 1rem);
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  color: color-mix(in srgb, var(--foreground) 65%, transparent);
+}
+
+.header-secondary-label {
+  white-space: nowrap;
+  opacity: 0.75;
+}
+
+.header-secondary-links {
+  display: inline-flex;
+  gap: clamp(0.45rem, 2vw, 0.75rem);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.header-secondary-links::-webkit-scrollbar {
+  display: none;
+}
+
+.header-secondary-links a {
+  transition: color 120ms ease;
+}
+
+.header-bottom {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 4vw, 2.5rem);
+  margin-top: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.header-bottom .page-timer {
+  white-space: nowrap;
+}
+
+.header-progress {
+  flex: 1;
+}
+
+.markdown {
+  display: grid;
+  gap: 1.25rem;
+  line-height: 1.75;
+  max-width: min(68ch, 100%);
+  word-break: break-word;
+  hyphens: auto;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin-top: 2.5rem;
+}
+
+.markdown h1 {
+  font-size: clamp(2.25rem, 5vw, 2.75rem);
+}
+
+.markdown h2 {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+}
+
+.markdown h3 {
+  font-size: clamp(1.5rem, 3vw, 1.75rem);
+}
+
+.markdown p,
+.markdown ul,
+.markdown ol,
+.markdown blockquote,
+.markdown pre {
+  margin: 0;
+}
+
+.markdown p {
+  color: color-mix(in srgb, currentColor 82%, transparent);
+}
+
+.markdown ul,
+.markdown ol {
+  padding-left: 1.5rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.markdown blockquote {
+  border-left: 3px solid color-mix(in srgb, currentColor 20%, transparent);
+  padding-left: 1rem;
+  font-style: italic;
+  color: color-mix(in srgb, currentColor 70%, transparent);
+}
+
+.keyword-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+  color: var(--foreground);
+  background: transparent;
+}
+
+.keyword-badge[data-type="character"] {
+  color: var(--keyword-character);
+}
+
+.keyword-badge[data-type="item"] {
+  color: var(--keyword-item);
+}
+
+.keyword-badge[data-type="evidence"] {
+  color: var(--keyword-evidence);
+}
+
+.keyword-badge[data-type="location"] {
+  color: var(--keyword-location);
+}
+
+.keyword-badge[data-type="fact"] {
+  color: var(--keyword-fact);
+}
+
+.keyword-badge[data-type="important"] {
+  color: var(--keyword-important);
+}
+
+.keyword-inline[data-type] {
+  border-bottom: 1px dotted currentColor;
+  color: inherit;
+}
+
+.markdown strong {
+  font-weight: 600;
+}
+
+.markdown pre {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  padding: 1rem;
+}
+
+.markdown code {
+  font-family: var(--font-mono), "IBM Plex Mono", "SFMono-Regular",
+    Consolas, "Liberation Mono", Menlo, monospace;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  padding: 0.15rem 0.35rem;
+  border-radius: 0.4rem;
+  font-size: 0.95em;
+}
+
+.markdown pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.markdown a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 0.3em;
+}
+
+.markdown a:hover,
+.markdown a:focus-visible {
+  text-decoration-color: currentColor;
+  outline: none;
+}
+
+.markdown hr {
+  border: none;
+  border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+  margin: 2.5rem 0;
+}

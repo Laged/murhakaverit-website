@@ -1,0 +1,491 @@
+/* =====================================================
+   SIMPLIFIED 4-LAYER DESIGN
+   ===================================================== */
+
+/* Main container */
+.combined-card {
+  position: relative;
+  overflow: hidden;
+  background: transparent;
+  isolation: isolate;
+  min-height: clamp(640px, 80vh, 960px);
+  --corner-cut: 50px;
+  --border-width: 3px;
+  --border-opacity: 0.95;
+  --texture-size: 30px;
+  --accent-size: 64px;
+  --title-size: 1.25rem;
+  --text-size: 0.75rem;
+  --title-opacity: 1;
+  --text-opacity: 0.95;
+}
+
+@media (min-width: 768px) {
+  .combined-card {
+    --title-size: 1.875rem;
+  }
+}
+
+/* Shared clip-path for notched corners */
+.notched-corners {
+  clip-path: polygon(
+    0 var(--corner-cut),
+    var(--corner-cut) 0,
+    100% 0,
+    100% calc(100% - var(--corner-cut)),
+    calc(100% - var(--corner-cut)) 100%,
+    0 100%
+  );
+}
+
+/* LAYER 1: White Border (Largest) with animated gradient */
+.border-layer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    45deg,
+    rgba(255, 255, 255, calc(var(--border-opacity) * 0.6)),
+    rgba(255, 255, 255, var(--border-opacity)),
+    rgba(156, 163, 175, var(--border-opacity)),
+    rgba(255, 255, 255, var(--border-opacity)),
+    rgba(255, 255, 255, calc(var(--border-opacity) * 0.6))
+  );
+  background-size: 300% 300%;
+  animation: unifiedGlow 3s ease-in-out infinite;
+  z-index: 10;
+}
+
+@keyframes unifiedGlow {
+  0%, 100% {
+    background-position: 0% 50%;
+    filter: brightness(0.9);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: brightness(1.1);
+  }
+}
+
+/* LAYER 2: Background with Gradient (Smaller) */
+.background-layer {
+  position: absolute;
+  inset: var(--border-width);
+  background:
+    radial-gradient(circle at 20% -10%, rgba(56,189,248,0.45), transparent 55%),
+    radial-gradient(circle at 85% 10%, rgba(147,197,253,0.35), transparent 55%),
+    linear-gradient(135deg, #020617 0%, #0f172a 35%, #020617 65%, #010414 100%);
+  background-blend-mode: screen, screen, normal;
+  z-index: 11;
+}
+
+/* LAYER 3: Texture & Accents (Smaller still) */
+.texture-accent-layer {
+  position: absolute;
+  inset: calc(var(--border-width) + 8px);
+  z-index: 12;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: var(--texture-size) var(--texture-size);
+  mix-blend-mode: screen;
+  opacity: 0.9;
+}
+
+/* Corner accents with L-shaped glow using individual border shadows */
+.texture-accent-layer::before,
+.texture-accent-layer::after {
+  content: '';
+  position: absolute;
+  width: var(--accent-size);
+  height: var(--accent-size);
+  border: none;
+}
+
+.texture-accent-layer::before {
+  top: calc(var(--border-width) + 16px); /* Aligns with typography layer top */
+  right: calc(var(--border-width) + 16px);
+  border-top: 2px solid rgba(255,255,255,0.4);
+  border-right: 2px solid rgba(255,255,255,0.4);
+  animation: accentTopRight 3s ease-in-out infinite;
+}
+
+.texture-accent-layer::after {
+  bottom: calc(var(--border-width) + 16px); /* Align with typography layer bottom */
+  left: calc(var(--border-width) + 16px);
+  border-bottom: 2px solid rgba(255,255,255,0.4);
+  border-left: 2px solid rgba(255,255,255,0.4);
+  animation: accentBottomLeft 3s ease-in-out infinite;
+}
+
+/* Unified glow keyframes for border */
+@keyframes unifiedGlow {
+  0%, 100% {
+    filter: brightness(0.9);
+  }
+  50% {
+    filter: brightness(1.1);
+  }
+}
+
+/* Synchronized accent animations with directional shadows */
+@keyframes accentTopRight {
+  0%, 100% {
+    filter: brightness(0.9) drop-shadow(0 -2px 3px rgba(255,255,255,0.15)) drop-shadow(2px 0 3px rgba(255,255,255,0.15));
+  }
+  50% {
+    filter: brightness(1.1) drop-shadow(0 -3px 5px rgba(255,255,255,0.25)) drop-shadow(3px 0 5px rgba(255,255,255,0.25));
+  }
+}
+
+@keyframes accentBottomLeft {
+  0%, 100% {
+    filter: brightness(0.9) drop-shadow(0 2px 3px rgba(255,255,255,0.15)) drop-shadow(-2px 0 3px rgba(255,255,255,0.15));
+  }
+  50% {
+    filter: brightness(1.1) drop-shadow(0 3px 5px rgba(255,255,255,0.25)) drop-shadow(-3px 0 5px rgba(255,255,255,0.25));
+  }
+}
+
+/* LAYER 4: Typography Content with Header/Content/Footer sections */
+.typography-layer {
+  position: absolute;
+  inset: calc(var(--border-width) + 16px);
+  z-index: 13;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Header section - fixed height for title */
+.typography-header {
+  flex-shrink: 0;
+  height: calc(var(--accent-size) + 16px); /* 80px total for mobile */
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(4px, 1vw, 8px);
+}
+
+@media (min-width: 768px) {
+  .typography-header {
+    height: calc(var(--accent-size) + 32px); /* 96px on desktop */
+    padding: 0 clamp(32px, 5vw, 56px);
+  }
+}
+
+/* Content section - scrollable main content */
+.typography-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px clamp(4px, 1vw, 8px);
+  /* Hide default scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+@media (min-width: 768px) {
+  .typography-content {
+    padding: 24px clamp(32px, 5vw, 56px);
+  }
+}
+
+.typography-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Footer section - fixed height for future content */
+.typography-footer {
+  flex-shrink: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 clamp(4px, 1vw, 8px);
+  color: rgba(255,255,255,0.6);
+  font-size: 12px;
+  overflow: hidden;
+}
+
+.metadata-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  width: 100%;
+  overflow: hidden;
+  font-family: 'Audiowide', monospace;
+}
+
+@media (min-width: 768px) {
+  .metadata-display {
+    flex-direction: row;
+    gap: clamp(8px, 2vw, 16px);
+    align-items: center;
+  }
+}
+
+.metadata-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.metadata-item strong {
+  color: rgba(255,255,255,0.8);
+  margin-right: 4px;
+}
+
+@media (min-width: 768px) {
+  .typography-footer {
+    height: 64px;
+    padding: 0 clamp(32px, 5vw, 56px);
+    font-size: 14px;
+  }
+}
+
+.layer-title {
+  font-family: 'Audiowide', monospace;
+  font-size: var(--title-size);
+  color: rgba(255,255,255,var(--title-opacity));
+  letter-spacing: 0.1em;
+  margin-bottom: 0;
+  text-align: left;
+  flex-shrink: 0;
+  text-shadow: 
+    0 0 5px rgba(255,255,255,0.5),
+    0 0 10px rgba(156,163,175,0.3),
+    0 0 15px rgba(59,130,246,0.2),
+    0 0 20px rgba(59,130,246,0.1);
+  animation: hologramGlow 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 3px rgba(255,255,255,0.3));
+}
+
+@keyframes hologramGlow {
+  0%, 100% {
+    text-shadow: 
+      0 0 5px rgba(255,255,255,0.4),
+      0 0 8px rgba(156,163,175,0.2),
+      0 0 12px rgba(59,130,246,0.15),
+      0 0 16px rgba(59,130,246,0.1);
+    filter: drop-shadow(0 0 2px rgba(255,255,255,0.2));
+  }
+  50% {
+    text-shadow: 
+      0 0 8px rgba(255,255,255,0.6),
+      0 0 12px rgba(156,163,175,0.3),
+      0 0 18px rgba(59,130,246,0.25),
+      0 0 22px rgba(59,130,246,0.12);
+    filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
+  }
+}
+
+.layer-text {
+  font-family: 'Work Sans', sans-serif;
+  font-size: 16px;
+  color: rgba(255,255,255,var(--text-opacity));
+  text-align: left;
+  line-height: 1.6;
+  max-width: 65ch; /* ~65 characters per line */
+}
+
+/* Typography hierarchy for readability */
+.layer-text p {
+  margin-bottom: 24px; /* 24-28px spacing between paragraphs */
+  max-width: 65ch;
+  text-align: left; /* Prevent justification, keep ragged right */
+}
+
+.layer-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Subhead styles for content scanning */
+.layer-text h2,
+.layer-text .subhead {
+  font-family: 'Audiowide', monospace;
+  font-size: 18px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.9);
+  margin: 32px 0 16px 0;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 2px rgba(255,255,255,0.2);
+}
+
+/* Responsive typography for mobile breakpoints */
+@media (min-width: 360px) {
+  .layer-text {
+    font-size: 16px;
+  }
+}
+
+@media (min-width: 414px) {
+  .layer-text {
+    font-size: 17px;
+  }
+  .layer-text h2,
+  .layer-text .subhead {
+    font-size: 19px;
+  }
+}
+
+@media (min-width: 768px) {
+  .layer-text {
+    font-size: 18px;
+  }
+  .layer-text p {
+    margin-bottom: 28px; /* Increase paragraph spacing */
+  }
+  .layer-text h2,
+  .layer-text .subhead {
+    font-size: 20px;
+  }
+}
+
+/* Bullet points and lists for scanning */
+.layer-text ul {
+  margin: 16px 0 24px 20px;
+  padding: 0;
+}
+
+.layer-text li {
+  margin-bottom: 8px;
+  line-height: 1.6;
+  position: relative;
+}
+
+.layer-text li::marker {
+  color: rgba(255,255,255,0.7);
+  content: "▸ ";
+}
+
+/* Pull quotes for emphasis */
+.layer-text blockquote,
+.layer-text .pull-quote {
+  margin: 32px 0;
+  padding: 16px 20px;
+  border-left: 3px solid rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.03);
+  font-style: italic;
+  font-size: 1.1em;
+  color: rgba(255,255,255,0.9);
+  border-radius: 0 4px 4px 0;
+}
+
+/* Custom scrollbar indicator - responsive positioning */
+.scroll-indicator {
+  position: absolute;
+  right: 8px; /* Inside card on mobile */
+  top: 12.5%; /* Center vertically: (100% - 75%) / 2 */
+  height: 75%; /* 75% of card height */
+  width: 4px;
+  z-index: 20;
+  pointer-events: none;
+}
+
+@media (min-width: 768px) {
+  .scroll-indicator {
+    right: -15px; /* Outside card on desktop */
+  }
+}
+
+/* Temporarily removed media query for debugging */
+
+.scroll-track {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.scroll-thumb {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.6),
+    rgba(156,163,175,0.5)
+  );
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  min-height: 0;
+  box-shadow: 0 0 4px rgba(255,255,255,0.2);
+}
+
+.scroll-thumb.at-bottom {
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.8),
+    rgba(59,130,246,0.6)
+  );
+  box-shadow: 
+    0 0 8px rgba(255,255,255,0.4),
+    0 0 16px rgba(59,130,246,0.3);
+  animation: scrollGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes scrollGlow {
+  0% {
+    box-shadow: 
+      0 0 6px rgba(255,255,255,0.3),
+      0 0 12px rgba(59,130,246,0.2);
+  }
+  100% {
+    box-shadow: 
+      0 0 12px rgba(255,255,255,0.6),
+      0 0 24px rgba(59,130,246,0.4);
+  }
+}
+
+/* Accessibility improvements */
+.layer-text :focus-visible {
+  outline: 2px solid rgba(255,255,255,0.8);
+  outline-offset: 2px;
+}
+
+/* Apply notched corners to all layers */
+.combined-card .border-layer,
+.combined-card .background-layer,
+.combined-card .texture-accent-layer {
+  clip-path: polygon(
+    0 var(--corner-cut),
+    var(--corner-cut) 0,
+    100% 0,
+    100% calc(100% - var(--corner-cut)),
+    calc(100% - var(--corner-cut)) 100%,
+    0 100%
+  );
+}
+
+/* Accessibility: Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .border-layer,
+  .texture-accent-layer::before,
+  .texture-accent-layer::after,
+  .layer-title,
+  .scroll-thumb.at-bottom {
+    animation: none;
+  }
+  
+  .border-layer {
+    background: rgba(255, 255, 255, var(--border-opacity));
+  }
+  
+  .texture-accent-layer::before,
+  .texture-accent-layer::after {
+    filter: none;
+  }
+  
+  .layer-title {
+    text-shadow: 0 0 3px rgba(255,255,255,0.3);
+    filter: none;
+  }
+  
+  .scroll-thumb.at-bottom {
+    box-shadow: 
+      0 0 8px rgba(255,255,255,0.4),
+      0 0 16px rgba(59,130,246,0.3);
+  }
+}
