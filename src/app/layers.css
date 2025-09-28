@@ -8,7 +8,9 @@
   overflow: hidden;
   background: transparent;
   isolation: isolate;
-  min-height: clamp(640px, 80vh, 960px);
+  height: min(100%, clamp(640px, 80vh, 960px));
+  max-height: 100%;
+  min-height: clamp(480px, 70vh, 960px);
   --corner-cut: 50px;
   --border-width: 3px;
   --border-opacity: 0.95;
@@ -102,7 +104,7 @@
 
 .texture-accent-layer::before {
   top: calc(var(--border-width) + 16px); /* Aligns with typography layer top */
-  right: calc(var(--border-width) + 16px);
+  right: calc(var(--border-width) + 5px);
   border-top: 2px solid rgba(255,255,255,0.4);
   border-right: 2px solid rgba(255,255,255,0.4);
   animation: accentTopRight 3s ease-in-out infinite;
@@ -110,7 +112,7 @@
 
 .texture-accent-layer::after {
   bottom: calc(var(--border-width) + 16px); /* Align with typography layer bottom */
-  left: calc(var(--border-width) + 16px);
+  left: calc(var(--border-width) + 5px);
   border-bottom: 2px solid rgba(255,255,255,0.4);
   border-left: 2px solid rgba(255,255,255,0.4);
   animation: accentBottomLeft 3s ease-in-out infinite;
@@ -158,24 +160,31 @@
 /* Header section - fixed height for title */
 .typography-header {
   flex-shrink: 0;
-  height: calc(var(--accent-size) + 16px); /* 80px total for mobile */
+  min-height: calc(var(--accent-size) + 16px);
   display: flex;
   align-items: center;
-  padding: 0 clamp(4px, 1vw, 8px);
+  justify-content: center;
+  padding: clamp(12px, 3vw, 20px) clamp(4px, 1vw, 8px);
+  transition: transform 0.35s ease, opacity 0.35s ease, margin-bottom 0.35s ease;
+  will-change: transform, opacity, margin-bottom;
 }
 
 @media (min-width: 768px) {
   .typography-header {
-    height: calc(var(--accent-size) + 32px); /* 96px on desktop */
-    padding: 0 clamp(32px, 5vw, 56px);
+    min-height: calc(var(--accent-size) + 32px);
+    padding: clamp(18px, 3vw, 28px) clamp(32px, 5vw, 56px);
   }
+}
+
+.typography-header.header-hidden {
+  pointer-events: none;
 }
 
 /* Content section - scrollable main content */
 .typography-content {
   flex: 1;
   overflow-y: auto;
-  padding: 16px clamp(4px, 1vw, 8px);
+  padding: clamp(22px, 5vw, 28px) clamp(4px, 1vw, 10px) clamp(16px, 4vw, 24px);
   /* Hide default scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -183,7 +192,7 @@
 
 @media (min-width: 768px) {
   .typography-content {
-    padding: 24px clamp(32px, 5vw, 56px);
+    padding: clamp(26px, 3.6vw, 32px) clamp(32px, 5vw, 56px) clamp(20px, 3vw, 28px);
   }
 }
 
@@ -203,35 +212,33 @@
   overflow: hidden;
 }
 
-.metadata-display {
+
+.header-stack {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  align-items: flex-start;
+  gap: clamp(6px, 1.2vw, 12px);
   width: 100%;
-  overflow: hidden;
+}
+
+.header-meta {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 1vw, 8px);
   font-family: 'Audiowide', monospace;
-}
-
-@media (min-width: 768px) {
-  .metadata-display {
-    flex-direction: row;
-    gap: clamp(8px, 2vw, 16px);
-    align-items: center;
-  }
-}
-
-.metadata-item {
-  white-space: nowrap;
+  font-size: clamp(12px, 2.2vw, 14px);
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.12em;
+  text-transform: none;
   overflow: hidden;
-  text-overflow: ellipsis;
-  flex-shrink: 1;
-  min-width: 0;
+  will-change: transform, opacity, max-height;
+  transition: transform 0.35s ease, opacity 0.35s ease, max-height 0.35s ease;
 }
 
-.metadata-item strong {
-  color: rgba(255,255,255,0.8);
-  margin-right: 4px;
+.header-meta-item {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1vw, 10px);
+  white-space: normal;
 }
 
 @media (min-width: 768px) {
@@ -386,8 +393,6 @@
     right: -15px; /* Outside card on desktop */
   }
 }
-
-/* Temporarily removed media query for debugging */
 
 .scroll-track {
   position: absolute;

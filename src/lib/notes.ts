@@ -14,6 +14,7 @@ export type NoteSummary = {
 
 export type Note = NoteSummary & {
   content: string;
+  metadata: Record<string, string>;
 };
 
 const MARKDOWN_EXTENSION = ".md";
@@ -145,6 +146,78 @@ function ensureUniqueSlug(
   return candidateSegments;
 }
 
+type ParsedMarkdown = {
+  metadata: Record<string, string>;
+  content: string;
+};
+
+function stripBOM(value: string): string {
+  return value.replace(/^\uFEFF/, "");
+}
+
+function extractFrontMatter(markdown: string): ParsedMarkdown {
+  const normalised = stripBOM(markdown);
+  const lines = normalised.split(/\r?\n/);
+
+  let index = 0;
+  while (index < lines.length && lines[index].trim().length === 0) {
+    index += 1;
+  }
+
+  if (index >= lines.length || lines[index].trim() !== "---") {
+    return {
+      metadata: {},
+      content: normalised,
+    };
+  }
+
+  index += 1;
+  const metadata: Record<string, string> = {};
+
+  for (; index < lines.length; index += 1) {
+    const rawLine = lines[index];
+    const trimmed = rawLine.trim();
+
+    if (trimmed === "---") {
+      index += 1;
+      break;
+    }
+
+    if (trimmed.length === 0) {
+      continue;
+    }
+
+    const separatorIndex = trimmed.indexOf(":");
+    if (separatorIndex === -1) {
+      continue;
+    }
+
+    const key = trimmed.slice(0, separatorIndex).trim();
+    if (key.length === 0) {
+      continue;
+    }
+
+    let value = trimmed.slice(separatorIndex + 1).trim();
+    if (
+      (value.startsWith("\"") && value.endsWith("\"")) ||
+      (value.startsWith("'") && value.endsWith("'"))
+    ) {
+      value = value.slice(1, -1);
+    }
+
+    metadata[key] = value;
+  }
+
+  while (index < lines.length && lines[index].trim().length === 0) {
+    index += 1;
+  }
+
+  return {
+    metadata,
+    content: lines.slice(index).join("\n"),
+  };
+}
+
 async function collectNotes(seenSlugs: Set<string>): Promise<NoteSummary[]> {
   let directoryEntries;
 
@@ -170,6 +243,7 @@ async function collectNotes(seenSlugs: Set<string>): Promise<NoteSummary[]> {
     const relativePath = entry.name;
     const filePath = path.join(CONTENT_DIRECTORY, relativePath);
     const rawContent = await fs.readFile(filePath, "utf-8");
+    const { content: markdown } = extractFrontMatter(rawContent);
 
     const stem = path.parse(entry.name).name;
     const slugSegments = ensureUniqueSlug(explodeSegment(stem), seenSlugs);
@@ -186,8 +260,8 @@ async function collectNotes(seenSlugs: Set<string>): Promise<NoteSummary[]> {
     const summary: NoteSummary = {
       slug: slugSegments.join("/"),
       slugSegments,
-      title: (extractTitle(rawContent) ?? humaniseFileStem(stem)).trim(),
-      description: extractDescription(rawContent),
+      title: (extractTitle(markdown) ?? humaniseFileStem(stem)).trim(),
+      description: extractDescription(markdown),
       relativePath,
     };
 
@@ -217,11 +291,13 @@ export const getNoteBySlug = cache(
     }
 
     const filePath = path.join(CONTENT_DIRECTORY, match.relativePath);
-    const content = await fs.readFile(filePath, "utf-8");
+    const rawContent = await fs.readFile(filePath, "utf-8");
+    const { metadata, content } = extractFrontMatter(rawContent);
 
     return {
       ...match,
       content,
+      metadata,
     };
   },
 );

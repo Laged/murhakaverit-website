@@ -12,6 +12,7 @@ type MetadataMap = Record<string, string>;
 
 type NoteCardProps = {
   note: Note;
+  className?: string;
 };
 
 const BOLD_FIELD_PATTERN = /\*\*([^*:\n]+?)\s*:\s*([^*]+?)\*\*/g;
@@ -63,7 +64,7 @@ function extractMetadataFromContent(markdown: string): {
   };
 }
 
-export function NoteCard({ note }: NoteCardProps) {
+export function NoteCard({ note, className }: NoteCardProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const [contentContainer, setContentContainer] = useState<HTMLElement | null>(
@@ -76,14 +77,35 @@ export function NoteCard({ note }: NoteCardProps) {
   );
 
   const metadata = useMemo(() => {
-    const enriched: MetadataMap = { ...extractedMetadata };
+    const combined: MetadataMap = {};
 
-    if (!enriched.SIJAINTI) {
-      enriched.SIJAINTI = note.slugSegments.join(" / ");
+    if (note.metadata) {
+      for (const [rawKey, rawValue] of Object.entries(note.metadata)) {
+        const key = normalizeMetadataKey(rawKey);
+        const value = typeof rawValue === "string" ? rawValue.trim() : "";
+
+        if (key.length === 0 || value.length === 0) {
+          continue;
+        }
+
+        combined[key] = value;
+      }
     }
 
-    return enriched;
-  }, [extractedMetadata, note.slugSegments]);
+    for (const [key, value] of Object.entries(extractedMetadata)) {
+      if (combined[key]) {
+        continue;
+      }
+
+      combined[key] = value;
+    }
+
+    if (!combined.SIJAINTI) {
+      combined.SIJAINTI = note.slugSegments.join(" / ");
+    }
+
+    return combined;
+  }, [extractedMetadata, note.metadata, note.slugSegments]);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -160,8 +182,10 @@ export function NoteCard({ note }: NoteCardProps) {
     };
   }, [contentContainer]);
 
+  const wrapperClassName = className ? `w-full ${className}`.trim() : "w-full";
+
   return (
-    <div ref={wrapperRef} className="w-full">
+    <div ref={wrapperRef} className={wrapperClassName}>
       <CombinedCard title={note.title} metadata={metadata} />
       {portalTarget
         ? createPortal(
