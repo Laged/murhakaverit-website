@@ -8,15 +8,15 @@
   overflow: hidden;
   background: transparent;
   isolation: isolate;
-  height: min(100%, clamp(640px, 80vh, 960px));
-  max-height: 100%;
-  min-height: clamp(480px, 70vh, 960px);
-  --corner-cut: 50px;
+  height: 100%;
+  max-height: none;
+  min-height: 0;
+  --corner-cut: 25px; /* 2x smaller on mobile */
   --border-width: 3px;
   --border-opacity: 0.95;
   --texture-size: 30px;
-  --accent-size: 64px;
-  --title-size: 1.25rem;
+  --accent-size: 32px; /* Half size on mobile */
+  --title-size: 1.75rem;
   --text-size: 0.75rem;
   --title-opacity: 1;
   --text-opacity: 0.95;
@@ -24,7 +24,9 @@
 
 @media (min-width: 768px) {
   .combined-card {
-    --title-size: 1.875rem;
+    --corner-cut: 32px; /* Desktop cutout */
+    --accent-size: 64px; /* Full size on desktop */
+    --title-size: 2.5rem;
   }
 }
 
@@ -80,10 +82,10 @@
   z-index: 11;
 }
 
-/* LAYER 3: Texture & Accents (Smaller still) */
+/* LAYER 3: Texture & Accents (full size) */
 .texture-accent-layer {
   position: absolute;
-  inset: calc(var(--border-width) + 8px);
+  inset: var(--border-width);
   z-index: 12;
   background: 
     radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 1px, transparent 1px);
@@ -103,19 +105,29 @@
 }
 
 .texture-accent-layer::before {
-  top: calc(var(--border-width) + 16px); /* Aligns with typography layer top */
-  right: calc(var(--border-width) + 5px);
+  top: 16px; /* Inset from top edge */
+  right: 7px; /* Half inset on mobile */
   border-top: 2px solid rgba(255,255,255,0.4);
   border-right: 2px solid rgba(255,255,255,0.4);
   animation: accentTopRight 3s ease-in-out infinite;
 }
 
 .texture-accent-layer::after {
-  bottom: calc(var(--border-width) + 16px); /* Align with typography layer bottom */
-  left: calc(var(--border-width) + 5px);
+  bottom: 16px; /* Inset from bottom edge */
+  left: 7px; /* Half inset on mobile */
   border-bottom: 2px solid rgba(255,255,255,0.4);
   border-left: 2px solid rgba(255,255,255,0.4);
   animation: accentBottomLeft 3s ease-in-out infinite;
+}
+
+@media (min-width: 768px) {
+  .texture-accent-layer::before {
+    right: 13px;
+  }
+  
+  .texture-accent-layer::after {
+    left: 13px;
+  }
 }
 
 /* Unified glow keyframes for border */
@@ -150,7 +162,7 @@
 /* LAYER 4: Typography Content with Header/Content/Footer sections */
 .typography-layer {
   position: absolute;
-  inset: calc(var(--border-width) + 16px);
+  inset: var(--border-width);
   z-index: 13;
   display: flex;
   flex-direction: column;
@@ -184,7 +196,7 @@
 .typography-content {
   flex: 1;
   overflow-y: auto;
-  padding: clamp(22px, 5vw, 28px) clamp(4px, 1vw, 10px) clamp(16px, 4vw, 24px);
+  padding: 8px clamp(4px, 1vw, 10px) clamp(16px, 4vw, 24px);
   /* Hide default scrollbar */
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -192,7 +204,7 @@
 
 @media (min-width: 768px) {
   .typography-content {
-    padding: clamp(26px, 3.6vw, 32px) clamp(32px, 5vw, 56px) clamp(20px, 3vw, 28px);
+    padding: 12px clamp(32px, 5vw, 56px) clamp(20px, 3vw, 28px);
   }
 }
 
@@ -294,11 +306,67 @@
   max-width: 65ch; /* ~65 characters per line */
 }
 
+/* Content header styling - scrolls with content */
+.content-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  min-height: 40px; /* Ensure visible space on mobile */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .content-header {
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    min-height: 80px;
+  }
+}
+
+.content-header .layer-title {
+  margin-bottom: 8px;
+  /* Ensure title is visible with higher contrast */
+  color: #ffffff !important;
+  font-size: clamp(1.25rem, 4vw, 2.5rem) !important;
+  text-shadow: 
+    0 0 8px rgba(255,255,255,0.8),
+    0 0 16px rgba(255,255,255,0.4),
+    0 0 24px rgba(255,255,255,0.2) !important;
+  filter: drop-shadow(0 0 6px rgba(255,255,255,0.5)) !important;
+  animation: simpleGlow 1s ease-in-out infinite alternate !important;
+}
+
+@media (min-width: 768px) {
+  .content-header .layer-title {
+    margin-bottom: 16px;
+  }
+}
+
+.content-header .header-meta {
+  margin-top: 6px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+@media (min-width: 768px) {
+  .content-header .header-meta {
+    margin-top: 12px;
+    padding-bottom: 16px;
+  }
+}
+
 /* Typography hierarchy for readability */
 .layer-text p {
-  margin-bottom: 24px; /* 24-28px spacing between paragraphs */
+  margin-bottom: 12px; /* Mobile: half of desktop spacing */
   max-width: 65ch;
   text-align: left; /* Prevent justification, keep ragged right */
+}
+
+@media (min-width: 768px) {
+  .layer-text p {
+    margin-bottom: 24px; /* Desktop: full spacing between paragraphs */
+  }
 }
 
 .layer-text p:last-child {
@@ -441,6 +509,23 @@
     box-shadow: 
       0 0 12px rgba(255,255,255,0.6),
       0 0 24px rgba(59,130,246,0.4);
+  }
+}
+
+/* Responsive content padding to match accent layer positioning and corner cuts */
+.card-content-padding {
+  padding: 25px 7px;
+}
+
+@media (min-width: 640px) {
+  .card-content-padding {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .card-content-padding {
+    padding: 32px 2rem;
   }
 }
 

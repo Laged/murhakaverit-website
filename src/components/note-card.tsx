@@ -66,7 +66,6 @@ function extractMetadataFromContent(markdown: string): {
 
 export function NoteCard({ note, className }: NoteCardProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null);
   const [contentContainer, setContentContainer] = useState<HTMLElement | null>(
     null,
   );
@@ -109,22 +108,9 @@ export function NoteCard({ note, className }: NoteCardProps) {
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
-    const textContainer =
-      wrapper?.querySelector<HTMLElement>(".layer-text") ?? null;
     const scrollContainer =
       wrapper?.querySelector<HTMLElement>(".typography-content") ?? null;
 
-    if (!textContainer) {
-      setPortalTarget(null);
-      setContentContainer(null);
-      return;
-    }
-
-    while (textContainer.firstChild) {
-      textContainer.removeChild(textContainer.firstChild);
-    }
-
-    setPortalTarget(textContainer);
     setContentContainer(scrollContainer);
   }, [note.slug]);
 
@@ -182,21 +168,19 @@ export function NoteCard({ note, className }: NoteCardProps) {
     };
   }, [contentContainer]);
 
-  const wrapperClassName = className ? `w-full ${className}`.trim() : "w-full";
+  const wrapperClassName = ["flex min-h-0 h-full w-full", className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div ref={wrapperRef} className={wrapperClassName}>
-      <CombinedCard title={note.title} metadata={metadata} />
-      {portalTarget
-        ? createPortal(
-            <div className="markdown note-card-markdown">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {content}
-              </ReactMarkdown>
-            </div>,
-            portalTarget,
-          )
-        : null}
+      <CombinedCard title={note.title} metadata={metadata} className="flex-1">
+        <div className="markdown note-card-markdown">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {content}
+          </ReactMarkdown>
+        </div>
+      </CombinedCard>
     </div>
   );
 }

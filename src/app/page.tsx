@@ -1,8 +1,13 @@
-import Link from "next/link";
 
-import { NoteCard } from "@/components/note-card";
+import { CombinedCard } from "@/components/CombinedCard";
+import { FuturisticCard } from "@/components/FuturisticCard";
+import { FuturisticButton } from "@/components/futuristic-button";
+import { FooterButtons } from "@/components/footer-buttons";
 import { getNoteBySlug, getNoteSummaries } from "@/lib/notes";
 import { transformWikiLinks } from "@/lib/wiki-links";
+
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export const revalidate = 3600;
 
@@ -23,13 +28,18 @@ export default async function HomePage() {
 
   if (summaries.length === 0) {
     return (
-      <div className="flex flex-col gap-12">
-        <section className="flex min-h-[18rem] items-center justify-center rounded-3xl border border-foreground/10 bg-background/70 p-8 text-sm text-foreground/80">
+      <>
+        <section className="flex min-h-0 items-center justify-center rounded-3xl border border-foreground/10 bg-background/70 p-8 text-sm text-foreground/80">
           <p>
             No synced notes yet. Run <code className="font-mono text-xs">bun run sync-content</code> to pull in the Obsidian vault.
           </p>
         </section>
-      </div>
+        <footer className="footer-bar footer-bar--placeholder">
+          <div className="footer-actions">
+            <FuturisticButton disabled variant="ghost">Seuraava</FuturisticButton>
+          </div>
+        </footer>
+      </>
     );
   }
 
@@ -48,28 +58,43 @@ export default async function HomePage() {
   const otherNotes = summaries.filter((summary) => summary.slug !== landingSummary?.slug);
   const nextNote = otherNotes.at(0);
 
-  return (
-    <div className="flex flex-col gap-12">
-      {transformedLanding ? (
-        <>
-          <NoteCard note={transformedLanding} />
-          {nextNote ? (
-            <div className="flex justify-end">
-              <Link
-                href={`/notes/${nextNote.slug}`}
-                className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-foreground transition hover:border-foreground/50"
-              >
-                Seuraava
-                <span aria-hidden>→</span>
-              </Link>
-            </div>
-          ) : null}
-        </>
-      ) : (
-        <section className="flex min-h-[18rem] items-center justify-center rounded-3xl border border-foreground/10 bg-background/70 p-8 text-sm text-foreground/70">
+  if (!transformedLanding) {
+    return (
+      <>
+        <section className="flex min-h-0 items-center justify-center rounded-3xl border border-foreground/10 bg-background/70 p-8 text-sm text-foreground/70">
           <p>Landing note is unavailable.</p>
         </section>
-      )}
-    </div>
+        <footer className="footer-bar footer-bar--placeholder" aria-hidden />
+      </>
+    );
+  }
+
+  // Process metadata like notes page does
+  const metadata = transformedLanding.metadata ? Object.fromEntries(
+    Object.entries(transformedLanding.metadata).map(([key, value]) => [
+      key.toUpperCase(), 
+      typeof value === 'string' ? value : ''
+    ])
+  ) : {};
+
+  const nextHref = nextNote ? `/notes/${nextNote.slug}` : undefined;
+
+  return (
+    <>
+      <div className="h-full">
+        <FuturisticCard
+          title={transformedLanding.title}
+          metadata={metadata}
+          className="h-full"
+        >
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {transformedLanding.content}
+          </ReactMarkdown>
+        </FuturisticCard>
+      </div>
+      
+      {/* FooterButtons will portal to footer-slot */}
+      <FooterButtons nextHref={nextHref} />
+    </>
   );
 }

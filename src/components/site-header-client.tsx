@@ -38,63 +38,74 @@ export function SiteHeaderClient({ navItems, characterItems }: SiteHeaderClientP
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 bg-transparent">
-      <div className="header-bar">
-        <div className="header-top">
-          <div className="header-primary">
-            {navItems.map((item, index) => {
-              const active = isNavActive(pathname, item.href);
-              const baseClasses = "transition hover:text-foreground/60";
-              const activeClasses = active
-                ? "font-semibold text-foreground"
-                : "text-foreground/70";
+    <>
+      {/* Navigation Section */}
+      <nav className="z-50 bg-transparent">
+        <div className="header-bar">
+          <div className="header-top">
+            <div className="header-primary">
+              {navItems.map((item, index) => {
+                const active = isNavActive(pathname, item.href);
+                const baseClasses = "transition hover:text-foreground/60";
+                const activeClasses = active
+                  ? "font-semibold text-foreground"
+                  : "text-foreground";
 
-              return (
-                <Fragment key={item.href}>
-                  {index > 0 && (
-                    <span className="header-primary-divider" aria-hidden>
-                      |
-                    </span>
-                  )}
-                  <Link href={item.href} className={`${baseClasses} ${activeClasses}`.trim()}>
-                    {item.label}
-                  </Link>
-                </Fragment>
-              );
-            })}
-          </div>
-          {characterItems.length > 0 && (
-            <div className="header-secondary">
-              <span className="header-secondary-label">Hahmot</span>
-              <div className="header-secondary-links">
-                {characterItems.map((item) => {
-                  const active = isCharacterActive(pathname, item.href);
-                  const baseClasses = "transition hover:text-foreground";
-                  const activeClasses = active
-                    ? "font-semibold text-foreground"
-                    : "text-foreground/70";
-
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`${baseClasses} ${activeClasses}`.trim()}
-                    >
+                return (
+                  <Fragment key={item.href}>
+                    {index > 0 && (
+                      <span className="header-primary-divider" aria-hidden>
+                        |
+                      </span>
+                    )}
+                    <Link href={item.href} className={`${baseClasses} ${activeClasses}`.trim()}>
                       {item.label}
                     </Link>
-                  );
-                })}
-              </div>
+                  </Fragment>
+                );
+              })}
             </div>
-          )}
+            {characterItems.length > 0 && (
+              <div className="header-secondary">
+                <span className="header-secondary-label"></span>
+                <div className="header-secondary-links">
+                  {characterItems.map((item) => {
+                    const active = isCharacterActive(pathname, item.href);
+                    const baseClasses = "transition hover:text-foreground";
+                    const activeClasses = active
+                      ? "font-semibold text-foreground"
+                      : "text-foreground";
+
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={`${baseClasses} ${activeClasses}`.trim()}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="header-bottom">
-          <PageTimer />
-          <div className="header-progress">
-            <ScrollProgress />
+      </nav>
+      
+      {/* Timer/Progress Section */}
+      <div className="z-50 bg-transparent">
+        <div className="header-bar">
+          <div className="header-bottom">
+            <PageTimer />
+            <div className="header-progress">
+              <ScrollProgress />
+            </div>
           </div>
         </div>
       </div>
-    </header>
+
+      {/* Footer will be rendered via portal after this */}
+    </>
   );
 }

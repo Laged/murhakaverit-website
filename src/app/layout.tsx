@@ -4,6 +4,7 @@ import "./globals.css";
 import "./layers.css";
 
 import { SiteHeader } from "@/components/site-header";
+import { FontSizeProvider } from "@/components/FontSizeContext";
 
 const workSans = Work_Sans({
   variable: "--font-body",
@@ -57,12 +58,17 @@ export default function RootLayout({
       <body
         className={`${workSans.variable} ${audiowide.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <div className="flex min-h-screen flex-col">
-          <SiteHeader />
-          <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-4 pb-20 pt-12 sm:gap-16 sm:px-8 sm:pb-32 sm:pt-20">
-            {children}
-          </main>
-        </div>
+        <FontSizeProvider>
+          <div className="flex flex-col h-screen w-full max-w-6xl mx-auto px-4 sm:px-8">
+            <main className="flex-1 min-h-0 py-6 sm:py-8">
+              {children}
+            </main>
+            <div className="footer-container">
+              <div id="footer-slot"></div>
+              <SiteHeader />
+            </div>
+          </div>
+        </FontSizeProvider>
       </body>
     </html>
   );

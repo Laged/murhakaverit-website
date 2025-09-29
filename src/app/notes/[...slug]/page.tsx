@@ -1,8 +1,13 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { NoteCard } from "@/components/note-card";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+import { CombinedCard } from "@/components/CombinedCard";
+import { FuturisticCard } from "@/components/FuturisticCard";
+import { FuturisticButton } from "@/components/futuristic-button";
+import { FooterButtons } from "@/components/footer-buttons";
 import { getNoteBySlug, getNoteSummaries } from "@/lib/notes";
 import { transformWikiLinks } from "@/lib/wiki-links";
 
@@ -36,10 +41,16 @@ export async function generateMetadata({
 }
 
 export default async function NotePage({ params }: PageProps) {
+  console.log('NotePage function called');
+  
   const { slug } = await params;
+  console.log('Slug:', slug);
+  
   const note = await getNoteBySlug(slug);
+  console.log('Note loaded:', note?.title);
 
   if (!note) {
+    console.log('Note not found, calling notFound()');
     notFound();
   }
 
@@ -56,50 +67,30 @@ export default async function NotePage({ params }: PageProps) {
   const previousHref = previousNote ? `/notes/${previousNote.slug}` : undefined;
   const nextHref = nextNote ? `/notes/${nextNote.slug}` : undefined;
 
-  return (
-    <div className="flex flex-col gap-12">
-      <NoteCard note={{ ...note, content: transformed.content }} />
+  // Process metadata like NoteCard does
+  const metadata = note.metadata ? Object.fromEntries(
+    Object.entries(note.metadata).map(([key, value]) => [
+      key.toUpperCase(), 
+      typeof value === 'string' ? value : ''
+    ])
+  ) : {};
 
-      {(previousNote || nextNote) && (
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            {previousHref ? (
-              <Link
-                href={previousHref}
-                className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-foreground transition hover:border-foreground/50"
-              >
-                <span aria-hidden>←</span>
-                Edellinen
-              </Link>
-            ) : (
-              <Link
-                href="/"
-                className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-foreground transition hover:border-foreground/50"
-              >
-                <span aria-hidden>←</span>
-                Etusivu
-              </Link>
-            )}
-          </div>
-          {nextHref ? (
-            <Link
-              href={nextHref}
-              className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-foreground transition hover:border-foreground/50"
-            >
-              Seuraava
-              <span aria-hidden>→</span>
-            </Link>
-          ) : (
-            <Link
-              href="/"
-              className="inline-flex items-center gap-2 rounded-full border border-foreground/20 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-foreground transition hover:border-foreground/50"
-            >
-              Alkuun
-              <span aria-hidden>↺</span>
-            </Link>
-          )}
-        </div>
-      )}
-    </div>
+  return (
+    <>
+      <div className="h-full">
+        <FuturisticCard
+          title={note.title}
+          metadata={metadata}
+          className="h-full"
+        >
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {transformed.content}
+          </ReactMarkdown>
+        </FuturisticCard>
+      </div>
+      
+      {/* FooterButtons will portal to footer-slot */}
+      <FooterButtons previousHref={previousHref} nextHref={nextHref} />
+    </>
   );
 }
