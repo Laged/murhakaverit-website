@@ -488,17 +488,22 @@ h6 {
 }
 
 .header-bottom {
+  display: -webkit-flex;
   display: flex;
+  -webkit-align-items: center;
   align-items: center;
   gap: clamp(1rem, 4vw, 2.5rem);
   padding: 0 1rem;
   position: relative;
   z-index: 100;
   min-height: 2rem;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.01);
   isolation: isolate;
   transform: translateZ(0);
   -webkit-transform: translateZ(0);
+  will-change: transform;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 @media (min-width: 640px) {
