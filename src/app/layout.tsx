@@ -59,7 +59,7 @@ export default function RootLayout({
         className={`${workSans.variable} ${audiowide.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
         <FontSizeProvider>
-          <div className="flex flex-col h-screen w-full max-w-6xl mx-auto px-4 sm:px-8">
+          <div className="flex flex-col h-dvh w-full max-w-6xl mx-auto px-4 sm:px-8">
             <main className="flex-1 min-h-0 py-6 sm:py-8">
               {children}
             </main>
