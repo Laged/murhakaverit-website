@@ -28,53 +28,6 @@
           '';
         };
 
-        # Checks run with `nix flake check`
-        checks = {
-          # Lint check
-          lint = pkgs.runCommandLocal "lint-check" {
-            src = ./.;
-            nativeBuildInputs = [ pkgs.bun pkgs.nodejs_20 ];
-          } ''
-            export HOME=$(mktemp -d)
-            cp -r $src $HOME/src
-            chmod -R +w $HOME/src
-            cd $HOME/src
-            ${pkgs.bun}/bin/bun install --frozen-lockfile
-            ${pkgs.bun}/bin/bun run lint
-            mkdir "$out"
-          '';
-
-          # Build check
-          build = pkgs.runCommandLocal "build-check" {
-            src = ./.;
-            nativeBuildInputs = [ pkgs.bun pkgs.nodejs_20 ];
-          } ''
-            export HOME=$(mktemp -d)
-            cp -r $src $HOME/src
-            chmod -R +w $HOME/src
-            cd $HOME/src
-            ${pkgs.bun}/bin/bun install --frozen-lockfile
-            ${pkgs.bun}/bin/bun run build
-            mkdir "$out"
-          '';
-
-          # Playwright test check
-          test = pkgs.runCommandLocal "playwright-test" {
-            src = ./.;
-            nativeBuildInputs = [ pkgs.bun pkgs.nodejs_20 pkgs.chromium ];
-          } ''
-            export HOME=$(mktemp -d)
-            cp -r $src $HOME/src
-            chmod -R +w $HOME/src
-            cd $HOME/src
-            export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=${pkgs.chromium}/bin/chromium
-            export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-            ${pkgs.bun}/bin/bun install --frozen-lockfile
-            ${pkgs.bun}/bin/bunx playwright test
-            mkdir "$out"
-          '';
-        };
-
         # Apps for convenience commands
         apps = {
           # Run tests interactively

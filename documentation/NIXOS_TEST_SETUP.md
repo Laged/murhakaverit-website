@@ -70,20 +70,19 @@ nix-env -qaP chromium --json | jq '.[].meta.version'
 ### Local Development (NixOS)
 
 ```bash
-# Enter development shell (sets up environment)
-nix develop
-
-# Run tests
-bun run test
-
-# Or run directly via flake
+# Run tests via flake app (recommended)
 nix run .#test
 
-# Interactive UI mode
-bun run test:ui
+# Run with UI mode
+nix run .#test -- --ui
 
-# With visible browser
-bun run test:headed
+# Run with visible browser
+nix run .#test -- --headed
+
+# Or enter dev shell first
+nix develop
+bun run test
+bun run test:ui
 ```
 
 ### CI/CD (GitHub Actions)
@@ -96,11 +95,22 @@ The GitHub Actions workflow uses Determinate Nix:
 - name: Install dependencies
   run: nix develop --command bun install
 
+- name: Run linter
+  run: nix develop --command bun run lint
+
+- name: Run build
+  run: nix develop --command bun run build
+
 - name: Run tests
   run: nix run .#test
 ```
 
 **Identical commands locally and in CI!**
+
+Both local and CI use:
+- Same Nix flake environment
+- Same system chromium from nixpkgs
+- Same `nix run .#test` command
 
 ## Precommit Hook
 

@@ -30,17 +30,17 @@ Visit http://localhost:3000
 ## Testing
 
 ```bash
-# Run Playwright tests (interactive, inside nix develop)
+# Run Playwright tests
 nix run .#test
 
-# Run all checks (lint + build + test) for CI
-nix flake check
+# Run with UI mode
+nix run .#test -- --ui
 
 # Run just linting
-bun run lint
+nix develop --command bun run lint
 
 # Run just build
-bun run build
+nix develop --command bun run build
 ```
 
 ## Project Structure
