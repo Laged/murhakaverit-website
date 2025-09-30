@@ -1,83 +1,148 @@
-# ✅ NixOS Test Setup Complete
+# NixOS Playwright Test Setup
 
-## 🎉 What Was Accomplished
+This document explains how Playwright tests are configured to work identically on NixOS (local) and GitHub Actions (CI).
 
-All Playwright tests now run successfully on NixOS! Here's what was implemented:
+## Overview
 
-### 1. **NixOS Playwright Integration** ✅
+The project uses **Determinate Systems Nix** in both environments:
+- **Local**: NixOS with flake.nix
+- **CI**: Ubuntu with Determinate Nix Installer
 
-Updated `flake.nix` to include:
-- System Chromium (`pkgs.chromium`)
-- Environment variables for Playwright
-- Convenience `nix run .#test` command
+This ensures:
+- ✅ Identical test environments locally and in CI
+- ✅ Same system chromium from nixpkgs
+- ✅ No FHS compatibility issues
+- ✅ Consistent browser versions
+- ✅ Same commands work everywhere
 
-### 2. **GitHub Actions CI/CD** ✅
+## Configuration
 
-Created `.github/workflows/test.yml` that:
-- Runs on push to main and pull requests
-- Installs dependencies with Bun
-- Installs Playwright browsers
-- Runs linter, build, and all tests
-- Uploads test reports on failure
+### 1. Nix Flake (`flake.nix`)
 
-### 3. **Precommit Hooks** ✅
+The development shell includes:
+- `pkgs.chromium` - System browser for Playwright
+- Environment variables set in `shellHook`:
+  - `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH` - Points to system chromium
+  - `PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1` - Prevents downloading browsers
 
-Created `.husky/pre-commit` that:
-- Runs `bun run lint` before commit
-- Runs `bun run test` before commit
-- Blocks commit if either fails
+Test command via flake apps:
+```nix
+apps.test = {
+  type = "app";
+  program = toString (pkgs.writeShellScript "test" ''
+    export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=${pkgs.chromium}/bin/chromium
+    export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+    ${pkgs.bun}/bin/bunx playwright test "$@"
+  '');
+};
+```
 
-### 4. **Test Fixes** ✅
+### 2. Playwright Config (`playwright.config.ts`)
 
-Fixed all 12 Playwright tests to work with:
-- Next.js loading states
-- Static site generation
-- System Chromium browser
-- NixOS environment
+Simple configuration - same for both environments:
+```typescript
+launchOptions: {
+  executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
+}
 
----
+webServer: {
+  command: 'nix develop --command bun run dev',
+  url: 'http://localhost:3000',
+  reuseExistingServer: !process.env.CI,
+}
+```
 
-## 🚀 Usage
+### 3. Version Compatibility
 
-### Running Tests Locally (NixOS)
+**IMPORTANT**: The Playwright npm package version must match the version in nixpkgs.
+
+Current setup:
+- nixpkgs (24.11): Playwright 1.54.1
+- package.json: `"@playwright/test": "1.54.1"`
+
+If you see browser version errors, check:
+```bash
+nix-env -qaP chromium --json | jq '.[].meta.version'
+```
+
+## Running Tests
+
+### Local Development (NixOS)
 
 ```bash
-# Enter nix shell and run tests
-nix develop --command bun run test
+# Enter development shell (sets up environment)
+nix develop
 
-# Using convenience command
+# Run tests
+bun run test
+
+# Or run directly via flake
 nix run .#test
 
 # Interactive UI mode
-nix develop --command bun run test:ui
+bun run test:ui
 
 # With visible browser
-nix develop --command bun run test:headed
+bun run test:headed
 ```
 
-### Running Tests in CI
+### CI/CD (GitHub Actions)
 
-Tests run automatically on:
-- Every push to `main` branch
-- Every pull request to `main` branch
+The GitHub Actions workflow uses Determinate Nix:
+```yaml
+- name: Install Nix
+  uses: DeterminateSystems/nix-installer-action@main
 
-Workflow: `.github/workflows/test.yml`
+- name: Install dependencies
+  run: nix develop --command bun install
 
-### Precommit Hooks
+- name: Run tests
+  run: nix run .#test
+```
 
-Hooks run automatically on `git commit`:
-1. Lints code with ESLint
-2. Runs all Playwright tests
-3. Only allows commit if both pass
+**Identical commands locally and in CI!**
 
-To skip (not recommended):
+## Precommit Hook
+
+The `.husky/pre-commit` hook runs:
+1. Linter: `nix develop --command bun run lint`
+
+Tests run in CI/CD to keep commits fast (~12s test suite).
+
+## Troubleshooting
+
+### "Executable doesn't exist" error
+
+This means Playwright version mismatch. Fix:
+1. Check nixpkgs version
+2. Update `package.json` to match
+3. Run `bun install`
+
+### "Browser not found" in dev shell
+
+Make sure you're in the nix development shell:
 ```bash
-git commit --no-verify
+nix develop
+echo $PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+# Should show: /nix/store/.../bin/chromium
 ```
 
----
+### Tests fail in CI but pass locally
 
-## 📋 Test Results
+Since both use the same Nix environment, this should be rare. Check:
+- Timing issues (CI might be slower)
+- Network issues in CI
+- Environment-specific settings
+
+## Benefits of Determinate Nix in CI
+
+- 🚀 Fast installation (under 1 second)
+- 📦 Built-in binary cache (FlakeHub Cache)
+- 🔒 Reproducible environments
+- ✅ Same setup locally and in CI
+- 🎯 No environment drift
+
+## Test Results
 
 All 12 tests passing! 🎉
 
@@ -98,169 +163,8 @@ All 12 tests passing! 🎉
 12 passed (11.9s)
 ```
 
----
+## References
 
-## 🔧 Technical Implementation
-
-### flake.nix Changes
-
-```nix
-devShells.default = pkgs.mkShell {
-  packages = [
-    pkgs.nodejs_20
-    pkgs.bun
-    pkgs.chromium  # System browser for Playwright
-  ];
-
-  shellHook = ''
-    export PATH="$PWD/node_modules/.bin:$PATH"
-    export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=${pkgs.chromium}/bin/chromium
-    export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-  '';
-};
-
-# Convenience test command
-apps.test = {
-  type = "app";
-  program = toString (pkgs.writeShellScript "test" ''
-    export PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=${pkgs.chromium}/bin/chromium
-    export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
-    ${pkgs.bun}/bin/bunx playwright test "$@"
-  '');
-};
-```
-
-### playwright.config.ts Changes
-
-```typescript
-projects: [
-  {
-    name: 'chromium',
-    use: {
-      ...devices['Desktop Chrome'],
-      // Use system chromium on NixOS
-      launchOptions: {
-        executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH,
-      },
-    },
-  },
-],
-```
-
-### package.json Changes
-
-```json
-{
-  "devDependencies": {
-    "@playwright/test": "1.54.1",  // Matches nixpkgs version
-    "playwright": "1.54.1"
-  }
-}
-```
-
----
-
-## ⚠️ Important Notes
-
-### Version Compatibility
-
-Playwright npm package version **must match** nixpkgs playwright-driver version:
-- nixpkgs: **1.54.1**
-- npm: **1.54.1** ✅
-
-If versions mismatch, you'll see "Executable doesn't exist" errors.
-
-### Test Command
-
-❌ **Don't use:** `bun test` (runs Bun's test runner)
-✅ **Use:** `bun run test` (runs Playwright via bunx)
-
-### CI vs Local
-
-- **CI (GitHub Actions)**: Downloads browsers with `playwright install --with-deps`
-- **Local (NixOS)**: Uses system Chromium via `pkgs.chromium`
-
-Both approaches work correctly!
-
----
-
-## 🎯 Benefits
-
-### Before
-- ❌ Tests failed on NixOS with "missing dependencies" errors
-- ❌ No CI/CD pipeline
-- ❌ No precommit hooks
-- ❌ Manual testing only
-
-### After
-- ✅ All 12 tests pass on NixOS
-- ✅ Automated CI/CD on GitHub Actions
-- ✅ Precommit hooks prevent broken commits
-- ✅ `nix run .#test` convenience command
-- ✅ Tests run in 11.9 seconds
-- ✅ Documentation complete
-
----
-
-## 📚 Related Documentation
-
-- [TESTING.md](./TESTING.md) - Complete test guide
-- [README.md](../README.md) - Project overview
-- [.github/workflows/test.yml](../.github/workflows/test.yml) - CI/CD workflow
-- [.husky/pre-commit](../.husky/pre-commit) - Precommit hook
-
----
-
-## 🔄 Maintenance
-
-### Updating Playwright
-
-When nixpkgs updates playwright-driver:
-
-1. Check nixpkgs version:
-   ```bash
-   nix eval nixpkgs#playwright-driver.version --raw
-   ```
-
-2. Update package.json to match:
-   ```json
-   {
-     "devDependencies": {
-       "@playwright/test": "X.Y.Z",
-       "playwright": "X.Y.Z"
-     }
-   }
-   ```
-
-3. Reinstall dependencies:
-   ```bash
-   nix develop --command bun install
-   ```
-
-4. Test:
-   ```bash
-   nix run .#test
-   ```
-
-### Adding New Tests
-
-1. Add test to `tests/notes.spec.ts`
-2. Use `.last()` for futuristic-card selectors (skips loading state)
-3. Use `.markdown` class for content selectors (not `.typography-content`)
-4. Wait for `networkidle` before assertions
-5. Run locally: `nix run .#test`
-6. Commit will auto-run tests via precommit hook
-
----
-
-## ✅ Success Criteria Met
-
-- [x] Tests run on NixOS without errors
-- [x] `nix run .#test` command works
-- [x] GitHub Actions CI/CD configured
-- [x] Precommit hooks for linting and testing
-- [x] All 12 tests passing
-- [x] Documentation updated
-- [x] No manual intervention required
-
-**Status: PRODUCTION READY** 🚀
+- [Determinate Nix Installer](https://github.com/DeterminateSystems/nix-installer-action)
+- [NixOS Wiki - Playwright](https://nixos.wiki/wiki/Playwright)
+- [Playwright Documentation](https://playwright.dev/docs/intro)
