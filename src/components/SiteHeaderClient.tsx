@@ -3,9 +3,7 @@
 import { Fragment } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-import { PageTimer } from "@/components/page-timer";
-import { ScrollProgress } from "@/components/scroll-progress";
+import { ScrollProgress } from "@/components/ScrollProgress";
 
 export type HeaderNavItem = {
   label: string;
@@ -92,12 +90,11 @@ export function SiteHeaderClient({ navItems, characterItems }: SiteHeaderClientP
           </div>
         </div>
       </nav>
-      
-      {/* Timer/Progress Section */}
+
+      {/* Bottom bar with scroll progress */}
       <div className="z-50 bg-transparent">
         <div className="header-bar">
           <div className="header-bottom">
-            <PageTimer />
             <div className="header-progress">
               <ScrollProgress />
             </div>

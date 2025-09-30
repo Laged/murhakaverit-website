@@ -3,7 +3,7 @@ import { Audiowide, Work_Sans, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import "./layers.css";
 
-import { SiteHeader } from "@/components/site-header";
+import { SiteHeader } from "@/components/SiteHeader";
 import { FontSizeProvider } from "@/components/FontSizeContext";
 
 const workSans = Work_Sans({

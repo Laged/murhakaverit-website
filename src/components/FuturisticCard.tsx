@@ -1,8 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, type ReactElement } from 'react';
-import { ReadableContent } from './ReadableContent';
-import { useScrollStore } from '@/store/scrollStore';
+import React, { useEffect, useRef, useState, type ReactElement } from 'react';
 
 type MetadataMap = Record<string, string>;
 
@@ -15,27 +13,8 @@ interface FuturisticCardProps {
 
 export function FuturisticCard({ title, className = '', metadata, children }: FuturisticCardProps) {
   const contentRef = useRef<HTMLDivElement>(null);
-  
-  // Use Zustand store for global scroll state
-  const { 
-    scrollProgress, 
-    isAtBottom,
-    setScrollProgress, 
-    setIsAtBottom, 
-    setIsScrolling,
-    setCardTitle,
-    resetScroll
-  } = useScrollStore();
-
-  useEffect(() => {
-    // Set card title in store for other components to use
-    setCardTitle(title);
-    
-    // Reset scroll state when component mounts
-    return () => {
-      resetScroll();
-    };
-  }, [title, setCardTitle, resetScroll]);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
     const contentElement = contentRef.current;
@@ -48,7 +27,6 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       if (maxScroll <= 0) {
         setScrollProgress(0);
         setIsAtBottom(false);
-        setIsScrolling(false);
         return;
       }
 
@@ -59,16 +37,8 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       setIsAtBottom(scrollTop >= maxScroll - 10);
     };
 
-    let scrollTimeout: NodeJS.Timeout;
     const handleScroll = () => {
-      setIsScrolling(true);
       applyScrollMetrics();
-      
-      // Clear existing timeout and set new one
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        setIsScrolling(false);
-      }, 150); // Stop scrolling detection after 150ms of no scroll
     };
 
     contentElement.addEventListener('scroll', handleScroll);
@@ -139,9 +109,8 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       window.removeEventListener('wheel', handlePageScroll);
       window.removeEventListener('keydown', handleKeyScroll);
       resizeObserver.disconnect();
-      clearTimeout(scrollTimeout);
     };
-  }, [setScrollProgress, setIsAtBottom, setIsScrolling]);
+  }, []);
 
   // Sophisticated metadata parsing like CombinedCard
   const rawTime = metadata
@@ -349,9 +318,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
             
             {/* Content area */}
             <div style={{ margin: 0 }}>
-              <ReadableContent>
-                {children}
-              </ReadableContent>
+              {children}
             </div>
           </div>
         </div>

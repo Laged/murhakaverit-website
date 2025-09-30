@@ -12,6 +12,9 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
+    "test": "bunx playwright test",
+    "test:ui": "bunx playwright test --ui",
+    "test:headed": "bunx playwright test --headed",
     "sync-content": "bun scripts/sync-content.mjs",
     "precommit": "bun run sync-content && bun run lint && bun run build",
     "prepare": "bunx husky install"
@@ -21,11 +24,11 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-markdown": "^10.1.0",
-    "remark-gfm": "^4.0.1",
-    "zustand": "^5.0.8"
+    "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "1.54.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -33,7 +36,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "husky": "^9.1.7",
-    "playwright": "^1.55.1",
+    "playwright": "1.54.1",
     "tailwindcss": "^4",
     "typescript": "^5.9.2"
   }

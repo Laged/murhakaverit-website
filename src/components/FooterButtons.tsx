@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { FuturisticButton } from "@/components/futuristic-button";
+import { FuturisticButton } from "@/components/FuturisticButton";
 import { FontSizeControls } from "@/components/FontSizeControls";
 
 type FooterButtonsProps = {

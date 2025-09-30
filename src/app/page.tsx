@@ -1,15 +1,12 @@
 
-import { CombinedCard } from "@/components/CombinedCard";
 import { FuturisticCard } from "@/components/FuturisticCard";
-import { FuturisticButton } from "@/components/futuristic-button";
-import { FooterButtons } from "@/components/footer-buttons";
+import { FuturisticButton } from "@/components/FuturisticButton";
+import { FooterButtons } from "@/components/FooterButtons";
 import { getNoteBySlug, getNoteSummaries } from "@/lib/notes";
 import { transformWikiLinks } from "@/lib/wiki-links";
 
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-
-export const revalidate = 3600;
 
 function pickLandingNote(summaries: Awaited<ReturnType<typeof getNoteSummaries>>) {
   return (
@@ -87,9 +84,11 @@ export default async function HomePage() {
           metadata={metadata}
           className="h-full"
         >
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {transformedLanding.content}
-          </ReactMarkdown>
+          <div className="markdown">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {transformedLanding.content}
+            </ReactMarkdown>
+          </div>
         </FuturisticCard>
       </div>
       

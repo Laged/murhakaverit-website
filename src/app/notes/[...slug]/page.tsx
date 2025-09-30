@@ -4,10 +4,8 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { CombinedCard } from "@/components/CombinedCard";
 import { FuturisticCard } from "@/components/FuturisticCard";
-import { FuturisticButton } from "@/components/futuristic-button";
-import { FooterButtons } from "@/components/footer-buttons";
+import { FooterButtons } from "@/components/FooterButtons";
 import { getNoteBySlug, getNoteSummaries } from "@/lib/notes";
 import { transformWikiLinks } from "@/lib/wiki-links";
 
@@ -15,12 +13,13 @@ type PageProps = {
   params: Promise<{ slug: string[] }>;
 };
 
-export const revalidate = 3600;
-
 export async function generateStaticParams() {
   const summaries = await getNoteSummaries();
   return summaries.map((summary) => ({ slug: summary.slugSegments }));
 }
+
+// Disable dynamic params to prevent 404 routes from being generated
+export const dynamicParams = false;
 
 export async function generateMetadata({
   params,
@@ -41,16 +40,10 @@ export async function generateMetadata({
 }
 
 export default async function NotePage({ params }: PageProps) {
-  console.log('NotePage function called');
-  
   const { slug } = await params;
-  console.log('Slug:', slug);
-  
   const note = await getNoteBySlug(slug);
-  console.log('Note loaded:', note?.title);
 
   if (!note) {
-    console.log('Note not found, calling notFound()');
     notFound();
   }
 
@@ -83,9 +76,11 @@ export default async function NotePage({ params }: PageProps) {
           metadata={metadata}
           className="h-full"
         >
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {transformed.content}
-          </ReactMarkdown>
+          <div className="markdown">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {transformed.content}
+            </ReactMarkdown>
+          </div>
         </FuturisticCard>
       </div>
       

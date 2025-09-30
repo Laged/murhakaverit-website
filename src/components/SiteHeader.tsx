@@ -3,7 +3,7 @@ import {
   SiteHeaderClient,
   type CharacterNavItem,
   type HeaderNavItem,
-} from "@/components/site-header-client";
+} from "@/components/SiteHeaderClient";
 
 function buildNavItems(suomiSlug?: string): HeaderNavItem[] {
   const items: HeaderNavItem[] = [
