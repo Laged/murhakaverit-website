@@ -35,6 +35,11 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
 
       // Consider "at bottom" when within 10px of the bottom
       setIsAtBottom(scrollTop >= maxScroll - 10);
+
+      // Dispatch custom event for horizontal scroll indicator to sync
+      window.dispatchEvent(new CustomEvent('card-scroll-progress', {
+        detail: { progress, isAtBottom }
+      }));
     };
 
     const handleScroll = () => {
@@ -104,12 +109,16 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
     });
     resizeObserver.observe(contentElement);
 
+    // Initial scroll metrics calculation
+    setTimeout(applyScrollMetrics, 0);
+
     return () => {
       contentElement.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handlePageScroll);
       window.removeEventListener('keydown', handleKeyScroll);
       resizeObserver.disconnect();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sophisticated metadata parsing like CombinedCard
@@ -281,7 +290,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
           >
             
             {/* Header Section - now inside scrollable content */}
-            <div className="mb-4 pb-3 min-h-10 flex flex-col justify-center" style={{ margin: 0 }}>
+            <div className="mb-4 pb-3 flex flex-col" style={{ margin: 0 }}>
               <h1
                 className="mb-2 text-white"
                 style={{ 

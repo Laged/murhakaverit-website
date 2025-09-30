@@ -7,42 +7,18 @@ export function ScrollProgress() {
   const [isAtBottom, setIsAtBottom] = useState(false);
 
   useEffect(() => {
-    const updateScrollProgress = () => {
-      // Find the card content container
-      const contentElement = document.querySelector('[data-card-scroll]') as HTMLElement;
-      if (!contentElement) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = contentElement;
-      const maxScroll = Math.max(0, scrollHeight - clientHeight);
-
-      if (maxScroll <= 0) {
-        setScrollProgress(0);
-        setIsAtBottom(false);
-        return;
-      }
-
-      const progress = Math.min(1, Math.max(0, scrollTop / maxScroll));
-      setScrollProgress(progress);
-      setIsAtBottom(scrollTop >= maxScroll - 10);
+    // Listen to scroll progress events from FuturisticCard
+    const handleScrollProgress = (e: Event) => {
+      const customEvent = e as CustomEvent<{ progress: number; isAtBottom: boolean }>;
+      setScrollProgress(customEvent.detail.progress);
+      setIsAtBottom(customEvent.detail.isAtBottom);
     };
 
-    // Update on scroll
-    const contentElement = document.querySelector('[data-card-scroll]');
-    if (contentElement) {
-      contentElement.addEventListener('scroll', updateScrollProgress);
+    window.addEventListener('card-scroll-progress', handleScrollProgress);
 
-      // Initial update
-      updateScrollProgress();
-
-      // Update on resize
-      const resizeObserver = new ResizeObserver(updateScrollProgress);
-      resizeObserver.observe(contentElement);
-
-      return () => {
-        contentElement.removeEventListener('scroll', updateScrollProgress);
-        resizeObserver.disconnect();
-      };
-    }
+    return () => {
+      window.removeEventListener('card-scroll-progress', handleScrollProgress);
+    };
   }, []);
 
   const scrollFillWidth = scrollProgress * 100;

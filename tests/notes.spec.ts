@@ -205,22 +205,133 @@ test.describe('Note Rendering and Routing', () => {
     // Wait for page to load
     await page.waitForLoadState('networkidle');
 
-    // Verify both scroll indicators exist
+    // Get the content element and scroll indicators
+    const contentElement = page.locator('[data-card-scroll]');
     const scrollThumbHorizontal = page.locator('.scroll-thumb-horizontal');
     const scrollThumbVertical = page.locator('.scroll-thumb');
 
-    expect(await scrollThumbHorizontal.count()).toBeGreaterThan(0);
-    expect(await scrollThumbVertical.count()).toBeGreaterThan(0);
+    await expect(contentElement).toBeVisible();
+    await expect(scrollThumbHorizontal).toBeVisible();
+    await expect(scrollThumbVertical).toBeVisible();
 
-    // Check that content element has scroll data attribute
-    const contentElement = page.locator('[data-card-scroll]');
-    await expect(contentElement).toBeAttached();
+    // Get initial scroll thumb positions
+    const getScrollProgress = async () => {
+      const verticalHeight = await scrollThumbVertical.evaluate((el) => {
+        return parseFloat(el.style.height || '0');
+      });
+      const horizontalWidth = await scrollThumbHorizontal.evaluate((el) => {
+        return parseFloat(el.style.width || '0');
+      });
+      return { verticalHeight, horizontalWidth };
+    };
 
-    // Verify scroll functionality exists (indicators are synced via same data attribute)
-    const hasScrollAttribute = await contentElement.evaluate((el) => {
-      return el.hasAttribute('data-card-scroll');
+    const initialProgress = await getScrollProgress();
+
+    // Scroll the content element down
+    await contentElement.evaluate((el) => {
+      el.scrollTop = el.scrollHeight / 2; // Scroll to middle
     });
-    expect(hasScrollAttribute).toBe(true);
+
+    // Wait for scroll event to process
+    await page.waitForTimeout(100);
+
+    // Get new scroll thumb positions
+    const newProgress = await getScrollProgress();
+
+    // Both scrollbars should have updated (increased height/width)
+    expect(newProgress.verticalHeight).toBeGreaterThan(initialProgress.verticalHeight);
+    expect(newProgress.horizontalWidth).toBeGreaterThan(initialProgress.horizontalWidth);
+
+    // They should be in sync (same percentage)
+    const verticalPercent = newProgress.verticalHeight;
+    const horizontalPercent = newProgress.horizontalWidth;
+
+    // Allow 1% tolerance for rounding
+    expect(Math.abs(verticalPercent - horizontalPercent)).toBeLessThan(1);
+  });
+
+  test('scrollbar should update in realtime while scrolling', async ({ page }) => {
+    await page.goto('/notes/1/1/suomi-2068');
+    await page.waitForLoadState('networkidle');
+
+    const contentElement = page.locator('[data-card-scroll]');
+    const scrollThumbVertical = page.locator('.scroll-thumb');
+
+    await expect(contentElement).toBeVisible();
+    await expect(scrollThumbVertical).toBeVisible();
+
+    // Track scroll updates during scroll
+    const scrollUpdates: number[] = [];
+
+    // Set up listener for scroll thumb changes
+    await page.evaluate(() => {
+      const thumb = document.querySelector('.scroll-thumb') as HTMLElement;
+      if (!thumb) return;
+
+      const observer = new MutationObserver(() => {
+        const height = parseFloat(thumb.style.height || '0');
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).lastScrollHeight = height;
+      });
+
+      observer.observe(thumb, { attributes: true, attributeFilter: ['style'] });
+    });
+
+    // Scroll incrementally and check updates
+    for (let i = 0; i < 5; i++) {
+      await contentElement.evaluate((el, index) => {
+        el.scrollTop = (el.scrollHeight / 5) * (index + 1);
+      }, i);
+
+      await page.waitForTimeout(50);
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const height = await page.evaluate(() => (window as any).lastScrollHeight || 0);
+      scrollUpdates.push(height);
+    }
+
+    // Should have captured 5 different scroll positions
+    expect(scrollUpdates.length).toBe(5);
+
+    // Each should be progressively larger (scrolling down)
+    for (let i = 1; i < scrollUpdates.length; i++) {
+      expect(scrollUpdates[i]).toBeGreaterThanOrEqual(scrollUpdates[i - 1]);
+    }
+  });
+
+  test('card should not flash/resize on page load', async ({ page }) => {
+    await page.goto('/notes/1/1/suomi-2068');
+
+    // Wait for page to fully load including networkidle
+    await page.waitForLoadState('networkidle');
+
+    // Capture card dimensions after network is idle
+    const card = page.locator('.futuristic-card').last();
+    await expect(card).toBeVisible();
+
+    // Wait for markdown content to be present (ensures full load)
+    const markdown = card.locator('.markdown');
+    await expect(markdown).toBeVisible();
+
+    // Get initial dimensions after content is fully loaded
+    const initialBox = await card.boundingBox();
+    expect(initialBox).toBeTruthy();
+
+    // Wait for any potential layout shifts (fonts, images, etc)
+    await page.waitForTimeout(300);
+
+    // Get dimensions after potential flash
+    const afterBox = await card.boundingBox();
+    expect(afterBox).toBeTruthy();
+
+    // Dimensions should be stable (within 5px tolerance for layout settling)
+    expect(Math.abs(afterBox!.width - initialBox!.width)).toBeLessThan(5);
+    expect(Math.abs(afterBox!.height - initialBox!.height)).toBeLessThan(5);
+
+    // Also check that content is loaded (not in loading state)
+    const text = await markdown.textContent();
+    expect(text).toBeTruthy();
+    expect(text!.length).toBeGreaterThan(50);
   });
 
   test('markdown content should have proper paragraph spacing', async ({ page }) => {
