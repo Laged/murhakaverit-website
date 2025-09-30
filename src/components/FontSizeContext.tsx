@@ -17,6 +17,8 @@ export function FontSizeProvider({ children }: { children: React.ReactNode }) {
 
   // Load font size from localStorage on mount
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     const saved = localStorage.getItem('readable-font-size');
     if (saved) {
       const parsedSize = parseFloat(saved);
@@ -28,6 +30,8 @@ export function FontSizeProvider({ children }: { children: React.ReactNode }) {
 
   // Save font size to localStorage when it changes
   useEffect(() => {
+    if (typeof window === 'undefined') return;
+
     localStorage.setItem('readable-font-size', fontSize.toString());
   }, [fontSize]);
 

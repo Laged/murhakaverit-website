@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, type ReactElement } from 'react';
+import { useFontSize } from './FontSizeContext';
 
 type MetadataMap = Record<string, string>;
 
@@ -15,6 +16,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
   const contentRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const { fontSize } = useFontSize();
 
   useEffect(() => {
     const contentElement = contentRef.current;
@@ -27,6 +29,9 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       if (maxScroll <= 0) {
         setScrollProgress(0);
         setIsAtBottom(false);
+        window.dispatchEvent(new CustomEvent('card-scroll-progress', {
+          detail: { progress: 0, isAtBottom: false }
+        }));
         return;
       }
 
@@ -34,7 +39,13 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       setScrollProgress(progress);
 
       // Consider "at bottom" when within 10px of the bottom
-      setIsAtBottom(scrollTop >= maxScroll - 10);
+      const atBottom = scrollTop >= maxScroll - 10;
+      setIsAtBottom(atBottom);
+
+      // Dispatch custom event for horizontal scroll indicator to sync
+      window.dispatchEvent(new CustomEvent('card-scroll-progress', {
+        detail: { progress, isAtBottom: atBottom }
+      }));
     };
 
     const handleScroll = () => {
@@ -103,6 +114,9 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       setTimeout(applyScrollMetrics, 100); // Delay to ensure layout is complete
     });
     resizeObserver.observe(contentElement);
+
+    // Initial scroll metrics calculation
+    setTimeout(applyScrollMetrics, 0);
 
     return () => {
       contentElement.removeEventListener('scroll', handleScroll);
@@ -281,7 +295,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
           >
             
             {/* Header Section - now inside scrollable content */}
-            <div className="mb-4 pb-3 min-h-10 flex flex-col justify-center" style={{ margin: 0 }}>
+            <div className="mb-4 pb-3 flex flex-col" style={{ margin: 0 }}>
               <h1
                 className="mb-2 text-white"
                 style={{ 
@@ -317,7 +331,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
             </div>
             
             {/* Content area */}
-            <div style={{ margin: 0 }}>
+            <div style={{ margin: 0, fontSize: `${fontSize}rem` }}>
               {children}
             </div>
           </div>
