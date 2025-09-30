@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState, type ReactElement } from 'react';
+import { useFontSize } from './FontSizeContext';
 
 type MetadataMap = Record<string, string>;
 
@@ -15,6 +16,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
   const contentRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isAtBottom, setIsAtBottom] = useState(false);
+  const { fontSize } = useFontSize();
 
   useEffect(() => {
     const contentElement = contentRef.current;
@@ -27,6 +29,9 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       if (maxScroll <= 0) {
         setScrollProgress(0);
         setIsAtBottom(false);
+        window.dispatchEvent(new CustomEvent('card-scroll-progress', {
+          detail: { progress: 0, isAtBottom: false }
+        }));
         return;
       }
 
@@ -34,11 +39,12 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       setScrollProgress(progress);
 
       // Consider "at bottom" when within 10px of the bottom
-      setIsAtBottom(scrollTop >= maxScroll - 10);
+      const atBottom = scrollTop >= maxScroll - 10;
+      setIsAtBottom(atBottom);
 
       // Dispatch custom event for horizontal scroll indicator to sync
       window.dispatchEvent(new CustomEvent('card-scroll-progress', {
-        detail: { progress, isAtBottom }
+        detail: { progress, isAtBottom: atBottom }
       }));
     };
 
@@ -118,7 +124,6 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
       window.removeEventListener('keydown', handleKeyScroll);
       resizeObserver.disconnect();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Sophisticated metadata parsing like CombinedCard
@@ -326,7 +331,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
             </div>
             
             {/* Content area */}
-            <div style={{ margin: 0 }}>
+            <div style={{ margin: 0, fontSize: `${fontSize}rem` }}>
               {children}
             </div>
           </div>

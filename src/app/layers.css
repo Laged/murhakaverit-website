@@ -20,6 +20,7 @@
   --text-size: 0.75rem;
   --title-opacity: 1;
   --text-opacity: 0.95;
+  animation: cardFadeIn 0.3s ease-out;
 }
 
 @media (min-width: 768px) {
@@ -604,14 +605,12 @@
   min-width: 20px; /* Minimum size to ensure visibility */
   background: linear-gradient(
     to right,
-    rgba(147,197,253,0.6),
-    rgba(59,130,246,0.8)
-  );
+    rgba(255,255,255,0.6),
+    rgba(156,163,175,0.5)
+  ) !important;
   border-radius: 2px;
-  box-shadow:
-    0 0 4px rgba(59,130,246,0.4),
-    0 0 8px rgba(147,197,253,0.2);
-  transition: box-shadow 0.3s ease;
+  box-shadow: 0 0 4px rgba(255,255,255,0.2);
+  transition: all 0.2s ease;
   opacity: 1; /* Always visible */
 }
 
@@ -620,14 +619,29 @@
     to right,
     rgba(255,255,255,0.8),
     rgba(59,130,246,0.6)
-  );
+  ) !important;
   box-shadow:
     0 0 8px rgba(255,255,255,0.4),
-    0 0 16px rgba(59,130,246,0.3);
+    0 0 16px rgba(59,130,246,0.3) !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .scroll-thumb-horizontal {
     transition: none;
+  }
+  .combined-card {
+    animation: none;
+  }
+}
+
+/* Card fade-in animation for page transitions */
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
