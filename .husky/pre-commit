@@ -2,8 +2,4 @@
 echo "🔍 Running linter..."
 nix develop --command bun run lint || exit 1
 
-# Run tests
-echo "🧪 Running tests..."
-nix run .#test || exit 1
-
-echo "✅ All checks passed!"
+echo "✅ Linting passed! (Tests will run in CI/CD)"
