@@ -31,7 +31,7 @@ jobs:
         run: nix develop --command bun run build
 
       - name: Run tests
-        run: nix develop --command bunx playwright test
+        run: nix run .#test
 
       - name: Upload test results
         if: failure()

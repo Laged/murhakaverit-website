@@ -102,10 +102,15 @@ The GitHub Actions workflow uses Determinate Nix:
   run: nix develop --command bun run build
 
 - name: Run tests
-  run: nix develop --command bunx playwright test
+  run: nix run .#test
 ```
 
-**Same Nix environment locally and in CI!**
+**Identical commands locally and in CI!**
+
+Both local and CI use:
+- Same Nix flake environment
+- Same system chromium from nixpkgs
+- Same `nix run .#test` command
 
 ## Precommit Hook
 
