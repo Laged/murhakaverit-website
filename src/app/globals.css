@@ -17,6 +17,65 @@
   --foreground: var(--gamma-contrast);
 }
 
+/* React ViewTransition - exit/enter pattern for page transitions */
+.card-exit {
+  animation: fade-out 0.3s ease-in-out forwards;
+}
+
+.card-enter {
+  animation: fade-in 0.3s ease-in-out 0.3s backwards;
+}
+
+/* View Transitions API - browser native transitions for card elements */
+.card-background-layer {
+  view-transition-name: card-background;
+}
+
+.card-content-layer {
+  view-transition-name: card-content;
+}
+
+::view-transition-old(card-background),
+::view-transition-old(card-content) {
+  animation: fade-out 0.3s ease-in-out forwards;
+}
+
+::view-transition-new(card-background),
+::view-transition-new(card-content) {
+  animation: fade-in 0.3s ease-in-out 0.3s backwards;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fallback animation for browsers without View Transitions API */
+@keyframes pageTransition {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 html {
   height: 100%;
   scroll-behavior: smooth;
@@ -60,13 +119,13 @@ body {
   -ms-overflow-style: none;
 }
 
-/* Simple glow animation for title */
+/* Enhanced glow animation for titles - slower, subtler */
 @keyframes simpleGlow {
-  0% {
-    filter: drop-shadow(0 0 4px rgba(255,255,255,0.4));
+  0%, 100% {
+    filter: drop-shadow(0 0 6px rgba(255,255,255,0.5)) drop-shadow(0 0 12px rgba(94,234,212,0.25));
   }
-  100% {
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.6));
+  50% {
+    filter: drop-shadow(0 0 9px rgba(255,255,255,0.65)) drop-shadow(0 0 18px rgba(94,234,212,0.4));
   }
 }
 
@@ -201,12 +260,16 @@ h6 {
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
-  padding: clamp(1rem, 2vw, 1.25rem) 1rem;
+  padding: clamp(0.5rem, 1.5vw, 0.75rem) 1rem; /* Reduced vertical padding for mobile */
+  padding-top: calc(clamp(0.5rem, 1.5vw, 0.75rem) + 6px); /* Extra top padding for glow */
+  padding-bottom: calc(clamp(0.5rem, 1.5vw, 0.75rem) + 6px); /* Extra bottom padding for glow */
 }
 
 @media (min-width: 640px) {
   .header-top {
-    padding: clamp(1rem, 2vw, 1.25rem) 2rem;
+    padding: clamp(0.75rem, 1.5vw, 1rem) 2rem; /* Reduced for desktop too */
+    padding-top: calc(clamp(0.75rem, 1.5vw, 1rem) + 6px);
+    padding-bottom: calc(clamp(0.75rem, 1.5vw, 1rem) + 6px);
   }
 }
 
@@ -223,6 +286,9 @@ h6 {
   letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--foreground);
+  overflow: visible; /* Prevent clipping of glow effects */
+  padding: 8px 12px; /* Extra padding to prevent glow clipping */
+  margin: -8px -12px; /* Negative margin to maintain layout */
 }
 
 .header-primary a {
@@ -242,6 +308,7 @@ h6 {
   font-size: 0.68rem;
   letter-spacing: 0.28em;
   color: color-mix(in srgb, var(--foreground) 65%, transparent);
+  overflow: visible; /* Prevent clipping of glow effects */
 }
 
 .header-secondary-label {
@@ -253,7 +320,10 @@ h6 {
   display: inline-flex;
   gap: clamp(0.45rem, 2vw, 0.75rem);
   overflow-x: auto;
+  overflow-y: visible; /* Allow vertical overflow for glow */
   scrollbar-width: none;
+  padding: 8px 12px; /* Extra padding on all sides to prevent glow clipping */
+  margin: -8px -12px; /* Negative margin to maintain layout */
 }
 
 .header-secondary-links::-webkit-scrollbar {
@@ -280,26 +350,79 @@ h6 {
 .header-secondary-links a:not(.font-semibold) {
   text-shadow: none !important;
   filter: none !important;
+  background: transparent !important;
 }
 
-/* Add glow effect for active/selected elements */
+/* Futuristic selection highlight for active elements */
 .header-primary a.font-semibold,
 .header-secondary-links a.font-semibold {
+  position: relative;
   color: #ffffff !important;
-  text-shadow: 
-    0 0 8px rgba(255,255,255,0.8),
-    0 0 16px rgba(255,255,255,0.4),
-    0 0 24px rgba(255,255,255,0.2) !important;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.5)) !important;
-  animation: simpleGlow 1s ease-in-out infinite alternate !important;
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.9),
+    0 0 16px rgba(94,234,212,0.6),
+    0 0 24px rgba(94,234,212,0.3) !important;
+  isolation: isolate;
 }
 
-@keyframes simpleGlow {
-  0% {
-    opacity: 0.8;
+/* Subtle animated underline glow */
+.header-primary a.font-semibold::before,
+.header-secondary-links a.font-semibold::before {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(94, 234, 212, 0.3) 20%,
+    rgba(94, 234, 212, 0.8) 50%,
+    rgba(94, 234, 212, 0.3) 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: underlineGlowShift 6s ease-in-out infinite;
+  filter: blur(0.5px);
+}
+
+/* Soft ambient glow behind text */
+.header-primary a.font-semibold::after,
+.header-secondary-links a.font-semibold::after {
+  content: '';
+  position: absolute;
+  inset: -6px -8px; /* Extra horizontal space for character nav */
+  background: radial-gradient(
+    ellipse at center,
+    rgba(94, 234, 212, 0.15) 0%,
+    rgba(94, 234, 212, 0.08) 40%,
+    transparent 70%
+  );
+  z-index: -1;
+  animation: ambientPulse 4s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+@keyframes underlineGlowShift {
+  0%, 100% {
+    background-position: 0% 0%;
+    opacity: 0.6;
   }
-  100% {
+  50% {
+    background-position: 100% 0%;
     opacity: 1;
+  }
+}
+
+@keyframes ambientPulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
   }
 }
 
@@ -381,7 +504,7 @@ h6 {
   flex-direction: column;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  padding: clamp(0.75rem, 2.6vw, 1.25rem) clamp(1rem, 4vw, 2.25rem);
+  padding: clamp(0.5rem, 2vw, 1rem) clamp(1rem, 4vw, 2.25rem); /* Reduced vertical padding for mobile */
   backdrop-filter: blur(16px);
   position: relative;
 }
@@ -497,7 +620,7 @@ h6 {
   padding: 0 1rem;
   position: relative;
   z-index: 100;
-  min-height: 2rem;
+  min-height: 1rem; /* Reduced from 2rem for mobile */
   background: rgba(0, 0, 0, 0.01);
   isolation: isolate;
   transform: translateZ(0);
@@ -510,6 +633,7 @@ h6 {
 @media (min-width: 640px) {
   .header-bottom {
     padding: 0 2rem;
+    min-height: 1.5rem; /* Slightly larger on desktop */
   }
 }
 
@@ -521,7 +645,15 @@ h6 {
   flex: 1;
   position: relative;
   z-index: 1;
-  min-height: 1.5rem;
+  min-height: 0.75rem; /* Reduced from 1.5rem for mobile */
+  padding: 0.25rem 0; /* Reduced vertical padding */
+}
+
+@media (min-width: 640px) {
+  .header-progress {
+    min-height: 1rem; /* Slightly larger on desktop */
+    padding: 0.5rem 0;
+  }
 }
 
 .markdown {

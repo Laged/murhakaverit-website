@@ -7,6 +7,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { FontSizeProvider } from "@/components/FontSizeContext";
 import { FooterButtonsProvider } from "@/components/FooterButtonsContext";
 import { FooterButtonsRenderer } from "@/components/FooterButtonsRenderer";
+import { ViewTransitions } from "./ViewTransitions";
 
 const workSans = Work_Sans({
   variable: "--font-body",
@@ -60,19 +61,21 @@ export default function RootLayout({
       <body
         className={`${workSans.variable} ${audiowide.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >
-        <FontSizeProvider>
-          <FooterButtonsProvider>
-            <div className="flex flex-col h-dvh w-full max-w-6xl mx-auto px-4 sm:px-8">
-              <main className="flex-1 min-h-0 py-6 sm:py-8">
-                {children}
-              </main>
-              <div className="footer-container">
-                <FooterButtonsRenderer />
-                <SiteHeader />
+        <ViewTransitions>
+          <FontSizeProvider>
+            <FooterButtonsProvider>
+              <div className="flex flex-col h-dvh w-full max-w-6xl mx-auto px-4 sm:px-8">
+                <main className="flex-1 min-h-0 py-6 sm:py-8">
+                  {children}
+                </main>
+                <div className="footer-container">
+                  <FooterButtonsRenderer />
+                  <SiteHeader />
+                </div>
               </div>
-            </div>
-          </FooterButtonsProvider>
-        </FontSizeProvider>
+            </FooterButtonsProvider>
+          </FontSizeProvider>
+        </ViewTransitions>
       </body>
     </html>
   );

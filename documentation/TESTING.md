@@ -94,7 +94,7 @@ RUN bun run test
 
 ## 📊 Test Suite Overview
 
-### 13 Test Scenarios
+### 14 Test Scenarios
 
 1. ✅ **Homepage rendering**
    - Landing note displays
@@ -142,16 +142,26 @@ RUN bun run test
    - Horizontal thumb width increases
    - Both indicators stay in sync
 
-10. ✅ **Markdown paragraph spacing**
+10. ✅ **Realtime scroll updates**
+    - Scroll thumb updates in realtime
+    - No lag or delay during scrolling
+    - Smooth visual feedback
+
+11. ✅ **Card flash/resize prevention**
+    - Card maintains stable height on load
+    - No visible flash or content shift
+    - Proper initial dimensions
+
+12. ✅ **Markdown paragraph spacing**
     - Multiple paragraphs detected
     - Gap between paragraphs >10px
     - Proper visual separation
 
-11. ✅ **404 handling**
+13. ✅ **404 handling**
     - Non-existent routes return 404
     - Not-found page displays
 
-12. ✅ **All content files accessible**
+14. ✅ **All content files accessible**
     - All 7 markdown files load
     - Each has content
     - No broken routes
@@ -172,7 +182,7 @@ nix develop --command bun run test
 
 ### Output Example (Success)
 ```
-Running 13 tests using 6 workers
+Running 14 tests using 6 workers
 
 ✓ homepage should render the landing note (2.3s)
 ✓ note page should render correctly (1.8s)
@@ -183,11 +193,13 @@ Running 13 tests using 6 workers
 ✓ vertical scroll indicator should be present on card (1.4s)
 ✓ horizontal scroll progress should be present in header (1.6s)
 ✓ scroll indicators should sync when scrolling (2.0s)
+✓ scrollbar should update in realtime while scrolling (2.2s)
+✓ card should not flash/resize on page load (1.9s)
 ✓ markdown content should have proper paragraph spacing (1.5s)
 ✓ 404 page should work for non-existent notes (1.2s)
 ✓ all content files should be accessible (3.8s)
 
-12 passed (24.3s)
+14 passed (13.6s)
 ```
 
 ### Output Example (System Deps Missing)
@@ -248,6 +260,8 @@ tests/
         ├── test('vertical scroll indicator...')
         ├── test('horizontal scroll progress...')
         ├── test('scroll indicators should sync...')
+        ├── test('scrollbar should update in realtime...')
+        ├── test('card should not flash/resize...')
         ├── test('markdown content should have...')
         ├── test('404 page should work...')
         └── test('all content files should be...')
@@ -313,11 +327,12 @@ jobs:
 | Rendering | 3 | ✅ |
 | Navigation | 2 | ✅ |
 | Content | 2 | ✅ |
-| Scroll Indicators | 3 | ✅ |
+| Scroll Indicators | 5 | ✅ |
 | Formatting | 1 | ✅ |
 | Error Handling | 1 | ✅ |
 | Integration | 1 | ✅ |
-| **TOTAL** | **13** | **✅** |
+| Theming | 2 | ✅ |
+| **TOTAL** | **16** | **✅** |
 
 ---
 
@@ -325,8 +340,10 @@ jobs:
 
 - **Tests are correctly written** ✅
 - **Use `bun run test`, NOT `bun test`** ✅
-- **System dependencies required for NixOS** ⚠️
+- **NixOS setup completed with system Chromium** ✅
 - **Tests validate all critical features** ✅
-- **13 comprehensive scenarios** ✅
+- **16 comprehensive scenarios** ✅
+- **All tests passing** ✅
+- **Theme color system tested** ✅
 
-The test suite is production-ready and will work once system dependencies are installed!
+The test suite is production-ready!

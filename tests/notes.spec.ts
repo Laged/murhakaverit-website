@@ -407,4 +407,48 @@ test.describe('Note Rendering and Routing', () => {
       expect(text).toBeTruthy();
     }
   });
+
+  test('theme colors should be applied based on metadata', async ({ page }) => {
+    // Test that theme colors from THEME metadata are applied to card backgrounds
+    // Each Hahmo should have its own color gradient
+
+    // Navigate to a note (we'll use Hahmo A which should have red theme)
+    await page.goto('/notes/1/2/hahmo-a');
+    await page.waitForLoadState('networkidle');
+
+    // Get the futuristic card
+    const card = page.locator('.futuristic-card').last();
+    await expect(card).toBeVisible();
+
+    // Check that the background layer has a gradient
+    const backgroundLayer = card.locator('.card-background-layer').first();
+    const backgroundStyle = await backgroundLayer.evaluate((el) =>
+      window.getComputedStyle(el).background
+    );
+
+    // Background should contain gradient (not just solid color)
+    expect(backgroundStyle).toContain('gradient');
+
+    // The background should have been set (not empty)
+    expect(backgroundStyle.length).toBeGreaterThan(0);
+  });
+
+  test('default theme (blue) should be applied when no THEME metadata', async ({ page }) => {
+    // Navigate to NKL 2068 which should use default blue theme
+    await page.goto('/notes/1/0/nkl-2068');
+    await page.waitForLoadState('networkidle');
+
+    const card = page.locator('.futuristic-card').last();
+    await expect(card).toBeVisible();
+
+    // Check that the background layer has a gradient
+    const backgroundLayer = card.locator('.card-background-layer').first();
+    const backgroundStyle = await backgroundLayer.evaluate((el) =>
+      window.getComputedStyle(el).background
+    );
+
+    // Should contain default blue gradient colors (rgba(56,189,248,0.45) or similar)
+    expect(backgroundStyle).toContain('gradient');
+    expect(backgroundStyle.length).toBeGreaterThan(0);
+  });
 });

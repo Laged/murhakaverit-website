@@ -126,6 +126,58 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
     };
   }, []);
 
+  // Theme color extraction
+  const themeColor = metadata
+    ? (metadata["THEME"] ?? metadata["theme"] ?? "blue").toLowerCase()
+    : "blue";
+
+  // Theme color definitions
+  const themeColors: Record<string, {
+    primary: string;
+    glow: string;
+    gradientStart: string;
+    gradientEnd: string;
+  }> = {
+    blue: {
+      primary: '#5ef2ff',
+      glow: '#3b82f6',
+      gradientStart: 'rgba(56,189,248,0.45)',
+      gradientEnd: 'rgba(147,197,253,0.35)'
+    },
+    red: {
+      primary: '#ff5f8f',
+      glow: '#dc2626',
+      gradientStart: 'rgba(248,113,113,0.45)',
+      gradientEnd: 'rgba(252,165,165,0.35)'
+    },
+    orange: {
+      primary: '#ffb85c',
+      glow: '#ea580c',
+      gradientStart: 'rgba(251,146,60,0.45)',
+      gradientEnd: 'rgba(253,186,116,0.35)'
+    },
+    yellow: {
+      primary: '#ffd36b',
+      glow: '#d97706',
+      gradientStart: 'rgba(251,191,36,0.45)',
+      gradientEnd: 'rgba(253,224,71,0.35)'
+    },
+    green: {
+      primary: '#54e38f',
+      glow: '#059669',
+      gradientStart: 'rgba(52,211,153,0.45)',
+      gradientEnd: 'rgba(110,231,183,0.35)'
+    },
+    purple: {
+      primary: '#8d6bff',
+      glow: '#7c3aed',
+      gradientStart: 'rgba(167,139,250,0.45)',
+      gradientEnd: 'rgba(196,181,253,0.35)'
+    }
+  };
+
+  const theme = themeColors[themeColor] || themeColors.blue;
+
   // Sophisticated metadata parsing like CombinedCard
   const rawTime = metadata
     ? metadata["AIKA"] ?? metadata["aika"] ?? metadata["Aika"]
@@ -189,7 +241,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
 
   return (
     <div className={wrapperClassName}>
-      <section 
+      <section
         className="futuristic-card relative h-full w-full overflow-hidden shadow-2xl"
         style={{
           // CSS variables for responsive design
@@ -204,18 +256,27 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
           padding: 'var(--border-width)'
         } as React.CSSProperties & { [key: string]: string }}
       >
-        {/* Inner content area with gradients */}
+        {/* Base dark background - always visible, prevents white flash */}
         <div
           className="h-full w-full relative"
           style={{
-            background: `
-              radial-gradient(circle at 20% -10%, rgba(56,189,248,0.45), transparent 55%),
-              radial-gradient(circle at 85% 10%, rgba(147,197,253,0.35), transparent 55%),
-              linear-gradient(135deg, #020617 0%, #0f172a 35%, #020617 65%, #010414 100%)
-            `,
+            background: '#020617',
             clipPath: 'polygon(0 calc(var(--corner-cut) - var(--border-width)), calc(var(--corner-cut) - var(--border-width)) 0, 100% 0, 100% calc(100% - calc(var(--corner-cut) - var(--border-width))), calc(100% - calc(var(--corner-cut) - var(--border-width))) 100%, 0 100%)'
           }}
         >
+          {/* Animated gradient layer on top */}
+          <div
+            className="absolute inset-0 card-background-layer"
+            style={{
+              background: `
+                radial-gradient(circle at 20% -10%, ${theme.gradientStart}, transparent 55%),
+                radial-gradient(circle at 85% 10%, ${theme.gradientEnd}, transparent 55%),
+                linear-gradient(135deg, #020617 0%, #0f172a 35%, #020617 65%, #010414 100%)
+              `,
+              transition: 'background 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              clipPath: 'polygon(0 calc(var(--corner-cut) - var(--border-width)), calc(var(--corner-cut) - var(--border-width)) 0, 100% 0, 100% calc(100% - calc(var(--corner-cut) - var(--border-width))), calc(100% - calc(var(--corner-cut) - var(--border-width))) 100%, 0 100%)'
+            }}
+          >
           {/* Texture layer with dot pattern */}
           <div
             className="absolute inset-0"
@@ -290,7 +351,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
           {/* Content area - single scrollable area containing header and content */}
           <div
             ref={contentRef}
-            className="futuristic-card-content card-content-padding absolute inset-0 overflow-y-auto text-white"
+            className="futuristic-card-content card-content-padding card-content-layer absolute inset-0 overflow-y-auto text-white"
             data-card-scroll
           >
             
@@ -334,6 +395,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
             <div style={{ margin: 0, fontSize: `${fontSize}rem` }}>
               {children}
             </div>
+          </div>
           </div>
         </div>
       </section>
