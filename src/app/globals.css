@@ -17,6 +17,65 @@
   --foreground: var(--gamma-contrast);
 }
 
+/* React ViewTransition - exit/enter pattern for page transitions */
+.card-exit {
+  animation: fade-out 0.3s ease-in-out forwards;
+}
+
+.card-enter {
+  animation: fade-in 0.3s ease-in-out 0.3s backwards;
+}
+
+/* View Transitions API - browser native transitions for card elements */
+.card-background-layer {
+  view-transition-name: card-background;
+}
+
+.card-content-layer {
+  view-transition-name: card-content;
+}
+
+::view-transition-old(card-background),
+::view-transition-old(card-content) {
+  animation: fade-out 0.3s ease-in-out forwards;
+}
+
+::view-transition-new(card-background),
+::view-transition-new(card-content) {
+  animation: fade-in 0.3s ease-in-out 0.3s backwards;
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Fallback animation for browsers without View Transitions API */
+@keyframes pageTransition {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 html {
   height: 100%;
   scroll-behavior: smooth;

@@ -420,9 +420,9 @@ test.describe('Note Rendering and Routing', () => {
     const card = page.locator('.futuristic-card').last();
     await expect(card).toBeVisible();
 
-    // Check that the inner content div has a background gradient
-    const innerDiv = card.locator('> div').first();
-    const backgroundStyle = await innerDiv.evaluate((el) =>
+    // Check that the background layer has a gradient
+    const backgroundLayer = card.locator('.card-background-layer').first();
+    const backgroundStyle = await backgroundLayer.evaluate((el) =>
       window.getComputedStyle(el).background
     );
 
@@ -441,9 +441,9 @@ test.describe('Note Rendering and Routing', () => {
     const card = page.locator('.futuristic-card').last();
     await expect(card).toBeVisible();
 
-    // Get the inner content div
-    const innerDiv = card.locator('> div').first();
-    const backgroundStyle = await innerDiv.evaluate((el) =>
+    // Check that the background layer has a gradient
+    const backgroundLayer = card.locator('.card-background-layer').first();
+    const backgroundStyle = await backgroundLayer.evaluate((el) =>
       window.getComputedStyle(el).background
     );
 

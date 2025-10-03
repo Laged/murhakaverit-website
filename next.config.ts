@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   output: "export",
   experimental: {
     optimizePackageImports: ["react", "react-dom"],
+    viewTransition: true,
   },
 };
 

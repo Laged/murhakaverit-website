@@ -241,7 +241,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
 
   return (
     <div className={wrapperClassName}>
-      <section 
+      <section
         className="futuristic-card relative h-full w-full overflow-hidden shadow-2xl"
         style={{
           // CSS variables for responsive design
@@ -256,18 +256,27 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
           padding: 'var(--border-width)'
         } as React.CSSProperties & { [key: string]: string }}
       >
-        {/* Inner content area with gradients */}
+        {/* Base dark background - always visible, prevents white flash */}
         <div
           className="h-full w-full relative"
           style={{
-            background: `
-              radial-gradient(circle at 20% -10%, ${theme.gradientStart}, transparent 55%),
-              radial-gradient(circle at 85% 10%, ${theme.gradientEnd}, transparent 55%),
-              linear-gradient(135deg, #020617 0%, #0f172a 35%, #020617 65%, #010414 100%)
-            `,
+            background: '#020617',
             clipPath: 'polygon(0 calc(var(--corner-cut) - var(--border-width)), calc(var(--corner-cut) - var(--border-width)) 0, 100% 0, 100% calc(100% - calc(var(--corner-cut) - var(--border-width))), calc(100% - calc(var(--corner-cut) - var(--border-width))) 100%, 0 100%)'
           }}
         >
+          {/* Animated gradient layer on top */}
+          <div
+            className="absolute inset-0 card-background-layer"
+            style={{
+              background: `
+                radial-gradient(circle at 20% -10%, ${theme.gradientStart}, transparent 55%),
+                radial-gradient(circle at 85% 10%, ${theme.gradientEnd}, transparent 55%),
+                linear-gradient(135deg, #020617 0%, #0f172a 35%, #020617 65%, #010414 100%)
+              `,
+              transition: 'background 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+              clipPath: 'polygon(0 calc(var(--corner-cut) - var(--border-width)), calc(var(--corner-cut) - var(--border-width)) 0, 100% 0, 100% calc(100% - calc(var(--corner-cut) - var(--border-width))), calc(100% - calc(var(--corner-cut) - var(--border-width))) 100%, 0 100%)'
+            }}
+          >
           {/* Texture layer with dot pattern */}
           <div
             className="absolute inset-0"
@@ -342,7 +351,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
           {/* Content area - single scrollable area containing header and content */}
           <div
             ref={contentRef}
-            className="futuristic-card-content card-content-padding absolute inset-0 overflow-y-auto text-white"
+            className="futuristic-card-content card-content-padding card-content-layer absolute inset-0 overflow-y-auto text-white"
             data-card-scroll
           >
             
@@ -386,6 +395,7 @@ export function FuturisticCard({ title, className = '', metadata, children }: Fu
             <div style={{ margin: 0, fontSize: `${fontSize}rem` }}>
               {children}
             </div>
+          </div>
           </div>
         </div>
       </section>

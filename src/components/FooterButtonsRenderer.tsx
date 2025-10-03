@@ -16,7 +16,7 @@ export function FooterButtonsRenderer() {
         </FuturisticButton>
       ) : (
         <FuturisticButton disabled variant="ghost">
-          Etusivu
+          Edellinen
         </FuturisticButton>
       )}
 
@@ -27,8 +27,8 @@ export function FooterButtonsRenderer() {
           Seuraava
         </FuturisticButton>
       ) : (
-        <FuturisticButton href="/" variant="ghost">
-          Alkuun
+        <FuturisticButton disabled variant="ghost">
+          Seuraava
         </FuturisticButton>
       )}
     </div>
