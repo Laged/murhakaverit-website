@@ -1,4 +1,4 @@
-import type { NoteSummary } from "@/lib/notes";
+import type { NoteSummary } from "./notes";
 
 type WikiLinkTransformResult = {
   content: string;
@@ -51,7 +51,7 @@ export function transformWikiLinks(
       }
 
       referenced.add(resolved.slug);
-      return `[${displayLabel}](/notes/${resolved.slug})`;
+      return `[${displayLabel}](/nkl-2068/notes/${resolved.slug})`;
     },
   );
 

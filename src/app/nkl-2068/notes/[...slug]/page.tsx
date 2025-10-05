@@ -4,10 +4,10 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import { FuturisticCard } from "@/components/FuturisticCard";
-import { FooterButtons } from "@/components/FooterButtons";
-import { getNoteBySlug, getNoteSummaries } from "@/lib/notes";
-import { transformWikiLinks } from "@/lib/wiki-links";
+import { FuturisticCard } from "@/components/common/FuturisticCard";
+import { FooterButtons } from "../../FooterButtons";
+import { getNoteBySlug, getNoteSummaries } from "../../lib/notes";
+import { transformWikiLinks } from "../../lib/wiki-links";
 
 type PageProps = {
   params: Promise<{ slug: string[] }>;
@@ -57,8 +57,8 @@ export default async function NotePage({ params }: PageProps) {
       ? summaries[currentIndex + 1]
       : undefined;
 
-  const previousHref = previousNote ? `/notes/${previousNote.slug}` : undefined;
-  const nextHref = nextNote ? `/notes/${nextNote.slug}` : undefined;
+  const previousHref = previousNote ? `/nkl-2068/notes/${previousNote.slug}` : undefined;
+  const nextHref = nextNote ? `/nkl-2068/notes/${nextNote.slug}` : undefined;
 
   // Process metadata like NoteCard does
   const metadata = note.metadata ? Object.fromEntries(

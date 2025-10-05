@@ -1,22 +1,22 @@
-import { getNoteSummaries } from "@/lib/notes";
+import { getNoteSummaries } from "./lib/notes";
 import {
   SiteHeaderClient,
   type CharacterNavItem,
   type HeaderNavItem,
-} from "@/components/SiteHeaderClient";
+} from "./SiteHeaderClient";
 
 function buildNavItems(suomiSlug?: string): HeaderNavItem[] {
   const items: HeaderNavItem[] = [
     {
       label: "Alku",
-      href: "/",
+      href: "/nkl-2068",
     },
   ];
 
   if (suomiSlug) {
     items.push({
       label: "Suomi 2068",
-      href: `/notes/${suomiSlug}`,
+      href: `/nkl-2068/notes/${suomiSlug}`,
     });
   }
 
@@ -31,7 +31,7 @@ function buildCharacterItems(
     .sort((a, b) => a.slug.localeCompare(b.slug))
     .map((summary) => ({
       label: summary.title.replace(/^hahmo\s*/i, ""),
-      href: `/notes/${summary.slug}`,
+      href: `/nkl-2068/notes/${summary.slug}`,
     }));
 }
 

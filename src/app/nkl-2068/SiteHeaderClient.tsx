@@ -3,7 +3,7 @@
 import { Fragment } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ScrollProgress } from "@/components/ScrollProgress";
+import { ScrollProgress } from "@/components/common/ScrollProgress";
 
 export type HeaderNavItem = {
   label: string;
@@ -16,8 +16,8 @@ export type CharacterNavItem = {
 };
 
 function isNavActive(pathname: string, href: string): boolean {
-  if (href === "/") {
-    return pathname === "/";
+  if (href === "/nkl-2068") {
+    return pathname === "/nkl-2068" || pathname === "/nkl-2068/";
   }
 
   return pathname === href || pathname.startsWith(`${href}/`);

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from "react";
-import { useFooterButtons } from "@/components/FooterButtonsContext";
+import { useFooterButtons } from "./FooterButtonsContext";
 
 type FooterButtonsProps = {
   previousHref?: string;

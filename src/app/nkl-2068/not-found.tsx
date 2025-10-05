@@ -18,7 +18,7 @@ export default function NotFound() {
         That vault entry is not available. Sync the content or use the header navigation to pick another note.
       </p>
       <Link
-        href="/"
+        href="/nkl-2068"
         className="mt-2 px-4 py-2 text-xs uppercase tracking-wide border border-foreground/30 hover:border-foreground/60 hover:bg-foreground/5 transition-colors rounded"
       >
         Return to Home

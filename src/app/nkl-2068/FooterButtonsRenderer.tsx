@@ -1,8 +1,8 @@
 'use client';
 
 import { useFooterButtons } from './FooterButtonsContext';
-import { FuturisticButton } from './FuturisticButton';
-import { FontSizeControls } from './FontSizeControls';
+import { FuturisticButton } from '@/components/common/FuturisticButton';
+import { FontSizeControls } from '@/components/common/FontSizeControls';
 
 export function FooterButtonsRenderer() {
   const { data } = useFooterButtons();
