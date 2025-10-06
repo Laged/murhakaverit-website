@@ -247,6 +247,54 @@ Film grain/noise overlay
 
 ---
 
+## Atomic Design Structure
+
+### Component Hierarchy
+
+Our project follows **Atomic Design** methodology for component organization:
+
+#### **Atoms** (`src/components/atoms/`)
+Basic UI building blocks - cannot be broken down further.
+
+- **`Heading.tsx`** - Reusable heading with optional glow effect
+  ```tsx
+  <Heading level={1} glow>Title</Heading>
+  <Heading level={2} className="text-blood-red">Subtitle</Heading>
+  ```
+
+- **`Paragraph.tsx`** - Styled paragraph with consistent typography
+  ```tsx
+  <Paragraph>Body text content</Paragraph>
+  <Paragraph className="text-gamma-accent">Colored text</Paragraph>
+  ```
+
+#### **Molecules** (`src/components/common/`)
+Simple combinations of atoms.
+
+- **`FuturisticButton.tsx`** - Button with futuristic styling
+- **`FuturisticCardContainer.tsx`** - Card wrapper with borders/gradients
+
+#### **Organisms** (Coming Soon)
+Complex UI sections combining molecules and atoms.
+
+- Hero section (current: `src/components/hero/`)
+- Summary section (current: `src/components/Summary.tsx`)
+- Navigation components
+
+### Migration Status
+
+✅ **Completed:**
+- Atom: Heading component
+- Atom: Paragraph component
+- Refactored: Summary component uses atoms
+
+⏳ **Pending:**
+- Reorganize hero components into organisms
+- Create additional atoms (Button, Text, Icon)
+- Move components to atomic structure
+
+---
+
 ## Quick Reference
 
 ### Do's ✅
