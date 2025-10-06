@@ -4,9 +4,6 @@ import { AnimatedLogo } from './AnimatedLogo';
 import { useParallax } from '@/hooks/useParallax';
 
 export function Hero() {
-  // Logo moves slower (0.3x) - creates depth
-  const logoRef = useParallax<HTMLDivElement>({ speed: 0.3 });
-
   // Background layer moves at medium speed (0.5x)
   const bgRef = useParallax<HTMLDivElement>({ speed: 0.5 });
 
@@ -27,12 +24,8 @@ export function Hero() {
         }}
       />
 
-      {/* Logo layer - slower parallax for depth */}
-      <div
-        ref={logoRef}
-        className="relative z-10"
-        style={{ willChange: 'transform' }}
-      >
+      {/* Logo layer - each letter has individual parallax */}
+      <div className="relative z-10">
         <AnimatedLogo />
       </div>
     </div>
