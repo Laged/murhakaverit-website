@@ -1,12 +1,16 @@
 "use client";
 
+import { useParallax } from '@/hooks/useParallax';
 import "./crime-scene.css";
 
 export function CrimeScene() {
   const text = "MURHA ON KIVEMPAA KAVEREIDEN KANSSA";
 
+  // Subtle parallax - tape moves slightly faster than scroll (1.2x)
+  const tapeRef = useParallax<HTMLDivElement>({ speed: 1.2 });
+
   return (
-    <div className="crime-scene">
+    <div ref={tapeRef} className="crime-scene" style={{ willChange: 'transform' }}>
       <div className="crime-scene-marquee">
         <div className="crime-scene-marquee-group">
           <div className="crime-scene-item crime-scene-item--text">

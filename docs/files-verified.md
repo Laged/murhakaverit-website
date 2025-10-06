@@ -1,5 +1,19 @@
 # Files Verification & Atomic Design Refactor
 
+## ✨ Features
+
+### Parallax Scrolling
+- ✅ Multi-layer background parallax on Hero section
+- ✅ Logo moves slower (0.3x) - creates depth
+- ✅ Background pattern moves at medium speed (0.5x)
+- ✅ Crime scene tape moves slightly faster (1.2x)
+- ✅ Performance optimized with requestAnimationFrame
+- ✅ GPU-accelerated with `transform: translate3d()`
+
+**Implementation:** `src/hooks/useParallax.ts` - Reusable parallax hook
+
+---
+
 ## ✅ Verified Files (Following Documentation)
 
 ### Entry Points
@@ -24,11 +38,23 @@
 - ✅ `src/components/common/FuturisticCardContainer.tsx` - Reusable container
 - ✅ `src/components/common/FuturisticButton.tsx` - Styled button
 
-#### NKL Project Components (need review)
-- ⏳ `src/components/common/FuturisticCard.tsx` - Complex card component
-- ⏳ `src/components/common/ScrollProgress.tsx`
-- ⏳ `src/components/common/FontSizeContext.tsx`
-- ⏳ `src/components/common/FontSizeControls.tsx`
+#### NKL Project Components
+- ⚠️ `src/components/common/FuturisticCard.tsx` - **NEEDS REFACTOR: Hardcoded theme colors**
+- ✅ `src/components/common/ScrollProgress.tsx` - Uses theme correctly
+- ✅ `src/components/common/FontSizeContext.tsx` - No styling issues
+- ✅ `src/components/common/FontSizeControls.tsx` - Uses theme correctly
+
+### NKL-2068 App Structure
+- ✅ `src/app/nkl-2068/layout.tsx` - Clean, uses FontSizeProvider
+- ✅ `src/app/nkl-2068/page.tsx` - Uses FuturisticCard correctly
+- ✅ `src/app/nkl-2068/notes/[...slug]/page.tsx` - Dynamic routing
+- ✅ `src/app/nkl-2068/SiteHeader.tsx` - Server component
+- ✅ `src/app/nkl-2068/SiteHeaderClient.tsx` - Client navigation
+- ✅ `src/app/nkl-2068/FooterButtons.tsx` - Portal pattern
+- ✅ `src/app/nkl-2068/FooterButtonsContext.tsx` - Context provider
+- ✅ `src/app/nkl-2068/FooterButtonsRenderer.tsx` - Portal renderer
+- ✅ `src/app/nkl-2068/lib/notes.ts` - Data loading logic
+- ✅ `src/app/nkl-2068/lib/wiki-links.ts` - Wiki link transformer
 
 ---
 
@@ -229,7 +255,52 @@ export function Summary() {
 - `src/components/hero/PoisonBackground.tsx` - Unused component
 - `src/components/hero/poison-background.css` - Unused styles
 
-## 📝 Files to Review Next
-- `src/app/nkl-2068/` - All NKL project files
-- `src/components/common/FuturisticCard.tsx` - Complex component, may need refactor
-- Test files - Update after refactor
+## ⚠️ Issues Found in NKL-2068
+
+### FuturisticCard.tsx - Theme Color Issue
+
+**Problem:** Hardcoded theme colors instead of using CSS variables
+
+```tsx
+// ❌ CURRENT - Hardcoded colors
+const themeColors = {
+  blue: {
+    primary: '#5ef2ff',
+    glow: '#3b82f6',
+    // ...
+  },
+  red: { /* ... */ },
+  // ...
+};
+```
+
+**Solution:** Use CSS variables from theme
+
+```tsx
+// ✅ PROPOSED - Use CSS variables
+const themeColors = {
+  blue: {
+    primary: 'var(--color-gamma-accent)',
+    glow: 'var(--color-gamma-glow)',
+    gradientStart: 'var(--color-gamma-gradient-start)',
+    gradientEnd: 'var(--color-gamma-gradient-end)',
+  },
+  // Define these in globals.css @theme
+};
+```
+
+**Impact:**
+- Character theme colors (red, orange, yellow, green, purple) work correctly
+- BUT: Not using centralized theme system
+- Inconsistent with landing page approach
+
+**Priority:** Medium - Works fine, but should align with theme system eventually
+
+---
+
+## 📝 Recommended Next Steps
+
+1. **Consider FuturisticCard refactor** - Move theme colors to CSS variables
+2. **Add character theme colors to horror.css** - Centralize all theme definitions
+3. **Test both landing page and NKL-2068** - Ensure consistency
+4. **Document character themes** - Update THEME.md with current implementation
