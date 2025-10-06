@@ -1,0 +1,200 @@
+@keyframes letterFadeInBob {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(1);
+    filter: blur(8px) drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-8px) scale(1.05);
+    filter: blur(0) drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0) drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+}
+
+@keyframes letterBob0 {
+  0%, 7.69%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  3.85% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob1 {
+  0%, 7.69%, 15.38%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  11.54% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob2 {
+  0%, 15.38%, 23.08%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  19.23% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob3 {
+  0%, 23.08%, 30.77%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  26.92% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob4 {
+  0%, 30.77%, 38.46%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  34.62% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob5 {
+  0%, 38.46%, 46.15%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  42.31% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob6 {
+  0%, 46.15%, 53.85%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  50% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob7 {
+  0%, 53.85%, 61.54%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  57.69% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob8 {
+  0%, 61.54%, 69.23%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  65.38% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob9 {
+  0%, 69.23%, 76.92%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  73.08% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob10 {
+  0%, 76.92%, 84.62%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  80.77% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob11 {
+  0%, 84.62%, 92.31%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  88.46% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+@keyframes letterBob12 {
+  0%, 92.31%, 100% {
+    transform: translateY(0) scale(1);
+    filter: drop-shadow(0 0 0px rgba(220, 38, 38, 0));
+  }
+  96.15% {
+    transform: translateY(-8px) scale(1.05);
+    filter: drop-shadow(0 0 8px rgba(220, 38, 38, 0.4)) drop-shadow(0 0 15px rgba(220, 38, 38, 0.2));
+  }
+}
+
+@keyframes bloodGlowCreep {
+  0% {
+    text-shadow:
+      -2px -2px 15px rgba(220, 38, 38, 0.6),
+      0 0 20px rgba(255,255,255,0.3);
+  }
+  25% {
+    text-shadow:
+      0 -2px 15px rgba(220, 38, 38, 0.6),
+      0 0 20px rgba(255,255,255,0.3);
+  }
+  50% {
+    text-shadow:
+      2px -2px 15px rgba(220, 38, 38, 0.6),
+      0 0 20px rgba(255,255,255,0.3);
+  }
+  75% {
+    text-shadow:
+      2px 2px 15px rgba(220, 38, 38, 0.6),
+      0 0 20px rgba(255,255,255,0.3);
+  }
+  100% {
+    text-shadow:
+      -2px -2px 15px rgba(220, 38, 38, 0.6),
+      0 0 20px rgba(255,255,255,0.3);
+  }
+}
+
+.hero-text {
+  animation: bloodGlowCreep 4s linear infinite;
+}
+
+.letter {
+  display: inline-block;
+  opacity: 0;
+}
+
+/* Initial fade-in with bob, then continuous bobbing wave */
+.letter-0 { animation: letterFadeInBob 0.5s ease-in-out 0.05s forwards, letterBob0 20s ease-in-out 1.2s infinite; }
+.letter-1 { animation: letterFadeInBob 0.5s ease-in-out 0.15s forwards, letterBob1 20s ease-in-out 1.3s infinite; }
+.letter-2 { animation: letterFadeInBob 0.5s ease-in-out 0.25s forwards, letterBob2 20s ease-in-out 1.4s infinite; }
+.letter-3 { animation: letterFadeInBob 0.5s ease-in-out 0.35s forwards, letterBob3 20s ease-in-out 1.5s infinite; }
+.letter-4 { animation: letterFadeInBob 0.5s ease-in-out 0.45s forwards, letterBob4 20s ease-in-out 1.6s infinite; }
+.letter-5 { animation: letterFadeInBob 0.5s ease-in-out 0.55s forwards, letterBob5 20s ease-in-out 1.7s infinite; }
+.letter-6 { animation: letterFadeInBob 0.5s ease-in-out 0.65s forwards, letterBob6 20s ease-in-out 1.8s infinite; }
+.letter-7 { animation: letterFadeInBob 0.5s ease-in-out 0.75s forwards, letterBob7 20s ease-in-out 1.9s infinite; }
+.letter-8 { animation: letterFadeInBob 0.5s ease-in-out 0.85s forwards, letterBob8 20s ease-in-out 2.0s infinite; }
+.letter-9 { animation: letterFadeInBob 0.5s ease-in-out 0.95s forwards, letterBob9 20s ease-in-out 2.1s infinite; }
+.letter-10 { animation: letterFadeInBob 0.5s ease-in-out 1.05s forwards, letterBob10 20s ease-in-out 2.2s infinite; }
+.letter-11 { animation: letterFadeInBob 0.5s ease-in-out 1.15s forwards, letterBob11 20s ease-in-out 2.3s infinite; }
+.letter-12 { animation: letterFadeInBob 0.5s ease-in-out 1.25s forwards, letterBob12 20s ease-in-out 2.4s infinite; }

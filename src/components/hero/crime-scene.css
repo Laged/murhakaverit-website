@@ -1,0 +1,101 @@
+:root {
+    --crime-scene-duration: 60s;
+    --crime-scene-scroll-start: 0;
+    --crime-scene-scroll-end: -100%;
+}
+
+@keyframes scroll-x {
+    from {
+        transform: translateX(var(--crime-scene-scroll-start));
+    }
+    to {
+        transform: translateX(var(--crime-scene-scroll-end));
+    }
+}
+
+.crime-scene {
+    position: relative;
+    width: 100%;
+    height: 5vh;
+    background-color: var(--color-blood-red);
+    overflow: hidden;
+}
+
+.crime-scene-marquee {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+}
+
+.crime-scene-marquee-group {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    min-width: 100%;
+    animation: scroll-x var(--crime-scene-duration) linear infinite;
+}
+
+.crime-scene-item {
+    position: relative;
+    height: 5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    flex-shrink: 0;
+}
+
+.crime-scene-text {
+    font-family: "Helvetica Neue", "Arial Narrow", Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    font-style: normal;
+    font-stretch: condensed;
+    color: #fff;
+    white-space: nowrap;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+.crime-scene-border-top,
+.crime-scene-border-bottom {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 15px;
+    overflow: hidden;
+    transform: skew(-20deg);
+}
+
+.crime-scene-border-top {
+    top: 0;
+}
+
+.crime-scene-border-bottom {
+    bottom: 0;
+}
+
+.crime-scene-border-content {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        to right,
+        var(--color-pure-black) 0,
+        var(--color-pure-black) 12.5%,
+        var(--color-blood-red-dark) 12.5%,
+        var(--color-blood-red-dark) 25%,
+        var(--color-pure-black) 25%,
+        var(--color-pure-black) 37.5%,
+        var(--color-blood-red-dark) 37.5%,
+        var(--color-blood-red-dark) 50%,
+        var(--color-pure-black) 50%,
+        var(--color-pure-black) 62.5%,
+        var(--color-blood-red-dark) 62.5%,
+        var(--color-blood-red-dark) 75%,
+        var(--color-pure-black) 75%,
+        var(--color-pure-black) 87.5%,
+        var(--color-blood-red-dark) 87.5%,
+        var(--color-blood-red-dark) 100%
+    );
+}

@@ -1,18 +1,38 @@
 @import "tailwindcss";
+@import "./themes/horror.css";
+
+@theme {
+  /* Gamma color palette - for Tailwind utilities */
+  --color-gamma-surface: #0d0f14;
+  --color-gamma-ambient: #131a26;
+  --color-gamma-contrast: #f5f7ff;
+  --color-gamma-accent: #5ef2ff;
+  --color-gamma-grid: rgba(124, 162, 210, 0.16);
+  --color-gamma-glow: rgba(122, 245, 214, 0.65);
+
+  /* Keyword colors - for Tailwind utilities */
+  --color-keyword-character: #7dfcff;
+  --color-keyword-item: #ffb85c;
+  --color-keyword-evidence: #8d6bff;
+  --color-keyword-location: #54e38f;
+  --color-keyword-fact: #ffd36b;
+  --color-keyword-important: #ff5f8f;
+}
 
 :root {
-  --gamma-surface: #0d0f14;
-  --gamma-ambient: #131a26;
-  --gamma-contrast: #f5f7ff;
-  --gamma-accent: #5ef2ff;
-  --gamma-grid: rgba(124, 162, 210, 0.16);
-  --gamma-glow: rgba(122, 245, 214, 0.65);
-  --keyword-character: #7dfcff;
-  --keyword-item: #ffb85c;
-  --keyword-evidence: #8d6bff;
-  --keyword-location: #54e38f;
-  --keyword-fact: #ffd36b;
-  --keyword-important: #ff5f8f;
+  /* Legacy CSS variables for direct usage */
+  --gamma-surface: var(--color-gamma-surface);
+  --gamma-ambient: var(--color-gamma-ambient);
+  --gamma-contrast: var(--color-gamma-contrast);
+  --gamma-accent: var(--color-gamma-accent);
+  --gamma-grid: var(--color-gamma-grid);
+  --gamma-glow: var(--color-gamma-glow);
+  --keyword-character: var(--color-keyword-character);
+  --keyword-item: var(--color-keyword-item);
+  --keyword-evidence: var(--color-keyword-evidence);
+  --keyword-location: var(--color-keyword-location);
+  --keyword-fact: var(--color-keyword-fact);
+  --keyword-important: var(--color-keyword-important);
   --background: var(--gamma-surface);
   --foreground: var(--gamma-contrast);
 }
@@ -82,9 +102,8 @@ html {
   scroll-padding-top: 6.5rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+@theme {
+  /* Font families */
   --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
 }
@@ -163,8 +182,7 @@ body {
 
 body {
   min-height: 100dvh;
-  height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .nav-scroll {

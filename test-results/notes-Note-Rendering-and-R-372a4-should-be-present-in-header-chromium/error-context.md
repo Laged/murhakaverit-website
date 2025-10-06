@@ -1,0 +1,42 @@
+# Page snapshot
+
+```yaml
+- navigation:
+  - button "previous" [disabled]:
+    - img "previous"
+  - text: 1/1
+  - button "next" [disabled]:
+    - img "next"
+- img
+- img
+- text: Next.js 15.5.4 Turbopack
+- img
+- dialog "Runtime Error":
+  - text: Runtime Error
+  - button "Copy Error Info":
+    - img
+  - button "No related documentation found" [disabled]:
+    - img
+  - link "Learn more about enabling Node.js inspector for server code with Chrome DevTools":
+    - /url: https://nextjs.org/docs/app/building-your-application/configuring/debugging#server-side-code
+    - img
+  - paragraph: Failed to load chunk server/chunks/ssr/[root-of-the-server]__64c3e31e._.js from runtime for chunk server/app/nkl-2068/notes/[...slug]/page.js
+  - paragraph: Call Stack 27
+  - button "Show 26 ignore-listed frame(s)":
+    - text: Show 26 ignore-listed frame(s)
+    - img
+  - text: Object.<anonymous> .next/server/app/nkl-2068/notes/[...slug]/page.js (3:3)
+- contentinfo:
+  - region "Error feedback":
+    - paragraph:
+      - link "Was this helpful?":
+        - /url: https://nextjs.org/telemetry#error-feedback
+    - button "Mark as helpful"
+    - button "Mark as not helpful"
+- button "Open Next.js Dev Tools":
+  - img
+- button "Open issues overlay": 1 Issue
+- button "Collapse issues badge":
+  - img
+- alert
+```

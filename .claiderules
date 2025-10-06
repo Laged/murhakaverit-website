@@ -1,0 +1,185 @@
+# Claude Code Rules for Murhakaverit Website
+
+## 📚 Required Reading
+
+Before starting any coding task, **ALWAYS** read these files first:
+
+1. **[docs/style-guide.md](docs/style-guide.md)** - Tailwind CSS v4 styling best practices (CRITICAL)
+2. **[documentation/ARCHITECTURE.md](documentation/ARCHITECTURE.md)** - Project structure and architecture
+3. **[documentation/AGENTS.md](documentation/AGENTS.md)** - AI agent development guidelines
+
+## 🎨 Styling Rules (CRITICAL)
+
+### Always Use Theme Colors
+
+```tsx
+// ✅ CORRECT - Use Tailwind utilities from @theme
+<div className="bg-almost-black text-blood-red">
+
+// ❌ WRONG - No hardcoded colors
+<div className="bg-[#0a0000]" style={{ color: '#8b0000' }}>
+```
+
+### Available Theme Colors
+- **Horror theme:** `bg-blood-red`, `bg-blood-red-dark`, `bg-almost-black`, `bg-pure-black`
+- **Gamma theme:** `bg-gamma-surface`, `bg-gamma-ambient`, `text-gamma-contrast`
+- **Keywords:** `text-keyword-character`, `text-keyword-item`, `text-keyword-evidence`
+
+### Texture Classes
+- `.texture-subtle-stripes` - Black with subtle red stripes
+- `.texture-blood-cells` - Organic blood cell pattern
+- `.texture-cross-hatch` - Crime scene evidence pattern
+- `.texture-noise` - Film grain overlay
+
+## 🏗️ Architecture Rules
+
+### File Organization
+```
+src/
+├── app/              # Next.js App Router (Server Components)
+│   ├── nkl-2068/    # NKL project-specific pages
+│   └── themes/      # Theme CSS files
+├── components/       # React components
+│   ├── common/      # Shared UI components
+│   └── hero/        # Landing page components
+└── lib/             # Utilities and data loaders
+```
+
+### Component Guidelines
+1. **Server Components by default** - Only add `'use client'` when needed
+2. **Props over state** - Minimize client-side state
+3. **Composition over configuration** - Prefer composable components
+4. **TypeScript strict mode** - All new code must be typed
+
+## 🚀 Development Workflow
+
+### Before Coding
+1. Read relevant documentation (style-guide.md, ARCHITECTURE.md)
+2. Check if similar patterns exist in codebase
+3. Use existing theme colors and utilities
+4. Follow established naming conventions
+
+### Testing Requirements
+```bash
+# Run before committing
+bun run lint        # ESLint checks
+bun run build       # Production build
+bun run test        # Playwright e2e tests
+```
+
+### Commands (via Nix)
+```bash
+nix develop                              # Enter dev environment
+nix develop --command bun run dev        # Start dev server
+nix develop --command bun run build      # Build for production
+nix run .#test                           # Run Playwright tests
+```
+
+## 📝 Code Style
+
+### Naming Conventions
+- **Components:** PascalCase (`FuturisticCard.tsx`)
+- **Utilities:** camelCase (`getNoteBySlug`)
+- **CSS classes:** kebab-case (`.crime-scene-border`)
+- **CSS variables:** kebab-case (`--color-blood-red`)
+
+### Import Order
+1. React imports
+2. Next.js imports
+3. Third-party libraries
+4. Local components
+5. Local utilities
+6. Types
+7. Styles
+
+### CSS Guidelines
+```css
+/* ✅ CORRECT - Use @theme for new colors */
+@theme {
+  --color-new-shade: #1a0505;
+}
+
+/* ✅ CORRECT - Add legacy variable */
+@layer base {
+  :root {
+    --new-shade: var(--color-new-shade);
+  }
+}
+
+/* ✅ CORRECT - Component classes in @layer */
+@layer components {
+  .my-component {
+    background: var(--color-new-shade);
+  }
+}
+```
+
+## 🎯 Project-Specific Rules
+
+### Horror/Crime Theme
+- All landing page components use horror theme colors
+- Crime scene tape uses blood-red background
+- Hero uses houndstooth pattern with almost-black background
+- NKL pages use Gamma theme (futuristic blue/cyan)
+
+### Responsive Design
+- Mobile-first approach
+- Use Tailwind breakpoints: `sm:`, `md:`, `lg:`
+- Test on mobile and desktop viewports
+
+### Performance
+- Minimize client components (use Server Components)
+- Avoid unnecessary re-renders
+- Use React.cache() for expensive operations
+- Keep bundle size under 150KB first load
+
+## 🚫 Forbidden Patterns
+
+### Never Do This
+```tsx
+// ❌ Hardcoded colors
+style={{ backgroundColor: '#ff0000' }}
+
+// ❌ Inline styles for simple colors
+style={{ color: 'red' }}
+
+// ❌ Creating CSS files without @layer
+.my-class { /* No layer wrapper */ }
+
+// ❌ Importing CSS variables incorrectly
+var(--blood-red)  // ❌ Use var(--color-blood-red) instead
+```
+
+### Always Do This
+```tsx
+// ✅ Tailwind utilities
+className="bg-blood-red text-white"
+
+// ✅ CSS variables from theme
+background: var(--color-blood-red)
+
+// ✅ Layer organization
+@layer components { .my-class { } }
+
+// ✅ Theme color references
+var(--color-blood-red)
+```
+
+## 📖 Quick Reference Links
+
+- **Styling:** [docs/style-guide.md](docs/style-guide.md)
+- **Architecture:** [documentation/ARCHITECTURE.md](documentation/ARCHITECTURE.md)
+- **Testing:** [documentation/TESTING.md](documentation/TESTING.md)
+- **Agents:** [documentation/AGENTS.md](documentation/AGENTS.md)
+- **Theme (legacy):** [documentation/THEME.md](documentation/THEME.md)
+
+## 🔄 When in Doubt
+
+1. Check [docs/style-guide.md](docs/style-guide.md) for styling
+2. Search codebase for similar patterns
+3. Ask user for clarification
+4. Follow existing conventions
+
+---
+
+**Remember:** Consistency is key. When you see a pattern in the codebase, follow it.

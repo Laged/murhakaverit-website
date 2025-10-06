@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Note Rendering and Routing', () => {
   test('homepage should render the landing note', async ({ page }) => {
-    await page.goto('/');
+    await page.goto('/nkl-2068');
 
     // Check that the page loaded
     await expect(page).toHaveTitle(/NKL 2068/);
@@ -26,7 +26,7 @@ test.describe('Note Rendering and Routing', () => {
 
   test('note page should render correctly', async ({ page }) => {
     // Navigate to a specific note
-    await page.goto('/notes/1/0/nkl-2068');
+    await page.goto('/nkl-2068/notes/1/0/nkl-2068');
 
     // Check that the page loaded with correct title
     await expect(page).toHaveTitle(/NKL 2068/);
@@ -52,7 +52,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('note content should be rendered', async ({ page }) => {
-    await page.goto('/notes/1/1/suomi-2068');
+    await page.goto('/nkl-2068/notes/1/1/suomi-2068');
 
     // Wait for loading to finish
     await page.waitForLoadState('networkidle');
@@ -72,8 +72,8 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('navigation between notes should work', async ({ page }) => {
-    // Start at homepage
-    await page.goto('/');
+    // Start at NKL 2068 homepage
+    await page.goto('/nkl-2068');
 
     // Click next button
     const nextButton = page.getByText('Seuraava');
@@ -84,7 +84,7 @@ test.describe('Note Rendering and Routing', () => {
     await page.waitForLoadState('networkidle');
 
     // URL should have changed
-    expect(page.url()).toContain('/notes/');
+    expect(page.url()).toContain('/nkl-2068/notes/');
 
     // Card should still be visible
     const card = page.locator('.futuristic-card');
@@ -92,7 +92,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('wiki links should be rendered as clickable links', async ({ page }) => {
-    await page.goto('/notes/1/0/nkl-2068');
+    await page.goto('/nkl-2068/notes/1/0/nkl-2068');
 
     // Wait for loading to finish
     await page.waitForLoadState('networkidle');
@@ -102,7 +102,7 @@ test.describe('Note Rendering and Routing', () => {
     await expect(content).toBeVisible();
 
     // Check if there are any links in the content
-    const links = page.locator('.markdown a[href^="/notes/"]');
+    const links = page.locator('.markdown a[href^="/nkl-2068/notes/"]');
     const linkCount = await links.count();
 
     // If there are wiki links, verify they work
@@ -112,14 +112,14 @@ test.describe('Note Rendering and Routing', () => {
 
       // Get the href
       const href = await firstLink.getAttribute('href');
-      expect(href).toMatch(/^\/notes\//);
+      expect(href).toMatch(/^\/nkl-2068\/notes\//);
 
       // Click it
       await firstLink.click();
       await page.waitForLoadState('networkidle');
 
       // Should navigate to the linked note
-      expect(page.url()).toContain('/notes/');
+      expect(page.url()).toContain('/nkl-2068/notes/');
 
       // Card should be visible on the new page
       const card = page.locator('.futuristic-card');
@@ -129,7 +129,7 @@ test.describe('Note Rendering and Routing', () => {
 
   test('metadata should be displayed correctly', async ({ page }) => {
     // Go to a page that likely has metadata
-    await page.goto('/notes/1/2/hahmo-a');
+    await page.goto('/nkl-2068/notes/1/2/hahmo-a');
 
     // Wait for loading to finish
     await page.waitForLoadState('networkidle');
@@ -151,7 +151,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('vertical scroll indicator should be present on card', async ({ page }) => {
-    await page.goto('/notes/1/1/suomi-2068');
+    await page.goto('/nkl-2068/notes/1/1/suomi-2068');
 
     // Wait for loading to finish
     await page.waitForLoadState('networkidle');
@@ -174,7 +174,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('horizontal scroll progress should be present in header', async ({ page }) => {
-    await page.goto('/notes/1/1/suomi-2068');
+    await page.goto('/nkl-2068/notes/1/1/suomi-2068');
 
     // Wait for page to load
     await page.waitForLoadState('networkidle');
@@ -200,7 +200,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('scroll indicators should sync when scrolling', async ({ page }) => {
-    await page.goto('/notes/1/1/suomi-2068');
+    await page.goto('/nkl-2068/notes/1/1/suomi-2068');
 
     // Wait for page to load
     await page.waitForLoadState('networkidle');
@@ -251,7 +251,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('scrollbar should update in realtime while scrolling', async ({ page }) => {
-    await page.goto('/notes/1/1/suomi-2068');
+    await page.goto('/nkl-2068/notes/1/1/suomi-2068');
     await page.waitForLoadState('networkidle');
 
     const contentElement = page.locator('[data-card-scroll]');
@@ -300,7 +300,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('card should not flash/resize on page load', async ({ page }) => {
-    await page.goto('/notes/1/1/suomi-2068');
+    await page.goto('/nkl-2068/notes/1/1/suomi-2068');
 
     // Wait for page to fully load including networkidle
     await page.waitForLoadState('networkidle');
@@ -335,7 +335,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('markdown content should have proper paragraph spacing', async ({ page }) => {
-    await page.goto('/notes/1/1/suomi-2068');
+    await page.goto('/nkl-2068/notes/1/1/suomi-2068');
 
     // Wait for content to load
     const markdown = page.locator('.markdown');
@@ -366,7 +366,7 @@ test.describe('Note Rendering and Routing', () => {
   });
 
   test('404 page should work for non-existent notes', async ({ page }) => {
-    await page.goto('/notes/999/non-existent');
+    await page.goto('/nkl-2068/notes/999/non-existent');
 
     // Wait for page to load
     await page.waitForLoadState('networkidle');
@@ -382,13 +382,13 @@ test.describe('Note Rendering and Routing', () => {
   test('all content files should be accessible', async ({ page }) => {
     // Test all the markdown files in content directory
     const notes = [
-      '/notes/1/0/nkl-2068',
-      '/notes/1/1/suomi-2068',
-      '/notes/1/2/hahmo-a',
-      '/notes/1/3/hahmo-b',
-      '/notes/1/4/hahmo-c',
-      '/notes/1/5/hahmo-d',
-      '/notes/1/6/hahmo-e',
+      '/nkl-2068/notes/1/0/nkl-2068',
+      '/nkl-2068/notes/1/1/suomi-2068',
+      '/nkl-2068/notes/1/2/hahmo-a',
+      '/nkl-2068/notes/1/3/hahmo-b',
+      '/nkl-2068/notes/1/4/hahmo-c',
+      '/nkl-2068/notes/1/5/hahmo-d',
+      '/nkl-2068/notes/1/6/hahmo-e',
     ];
 
     for (const noteUrl of notes) {
@@ -413,7 +413,7 @@ test.describe('Note Rendering and Routing', () => {
     // Each Hahmo should have its own color gradient
 
     // Navigate to a note (we'll use Hahmo A which should have red theme)
-    await page.goto('/notes/1/2/hahmo-a');
+    await page.goto('/nkl-2068/notes/1/2/hahmo-a');
     await page.waitForLoadState('networkidle');
 
     // Get the futuristic card
@@ -435,7 +435,7 @@ test.describe('Note Rendering and Routing', () => {
 
   test('default theme (blue) should be applied when no THEME metadata', async ({ page }) => {
     // Navigate to NKL 2068 which should use default blue theme
-    await page.goto('/notes/1/0/nkl-2068');
+    await page.goto('/nkl-2068/notes/1/0/nkl-2068');
     await page.waitForLoadState('networkidle');
 
     const card = page.locator('.futuristic-card').last();

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Creepster } from "next/font/google";
+import { Creepster, Bebas_Neue, Audiowide, Work_Sans } from "next/font/google";
 import "./globals.css";
 import "./layers.css";
 import { ViewTransitions } from "./ViewTransitions";
@@ -8,6 +8,27 @@ const creepster = Creepster({
   variable: "--font-creepster",
   subsets: ["latin"],
   weight: "400",
+  display: "swap",
+});
+
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const audiowide = Audiowide({
+  variable: "--font-audiowide",
+  subsets: ["latin"],
+  weight: "400",
+  display: "swap",
+});
+
+const workSans = Work_Sans({
+  variable: "--font-body",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
   display: "swap",
 });
 
@@ -38,7 +59,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${creepster.variable} antialiased bg-black text-white`}
+        className={`${creepster.variable} ${bebasNeue.variable} ${audiowide.variable} ${workSans.variable} antialiased bg-black text-white`}
       >
         <ViewTransitions>
           {children}

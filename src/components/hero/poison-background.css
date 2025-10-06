@@ -1,0 +1,120 @@
+@keyframes waveFlowTop {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+@keyframes waveFlowBottom {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: -200px 0;
+  }
+}
+
+@keyframes waveFlowLeft {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 200px;
+  }
+}
+
+@keyframes waveFlowRight {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 0 -200px;
+  }
+}
+
+.poison-bg {
+  position: relative;
+  background: radial-gradient(ellipse at center,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(10, 10, 10, 1) 100%
+  );
+  overflow: hidden;
+}
+
+/* Top wave - using SVG-like path created with radial gradients */
+.poison-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 15px 6px at 25px 3px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 15px 6px at 75px 3px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 15px 6px at 125px 3px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 15px 6px at 175px 3px, rgba(34, 197, 94, 0.8) 0%, transparent 100%);
+  background-size: 200px 6px;
+  background-repeat: repeat-x;
+  animation: waveFlowTop 10s linear infinite;
+}
+
+/* Bottom wave */
+.poison-bg::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 15px 6px at 25px 3px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 15px 6px at 75px 3px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 15px 6px at 125px 3px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 15px 6px at 175px 3px, rgba(34, 197, 94, 0.8) 0%, transparent 100%);
+  background-size: 200px 6px;
+  background-repeat: repeat-x;
+  animation: waveFlowBottom 10s linear infinite;
+}
+
+/* Left wave - need to use a wrapper div for this */
+.poison-bg > .wave-left {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 6px 15px at 3px 25px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 6px 15px at 3px 75px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 6px 15px at 3px 125px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 6px 15px at 3px 175px, rgba(34, 197, 94, 0.8) 0%, transparent 100%);
+  background-size: 6px 200px;
+  background-repeat: repeat-y;
+  animation: waveFlowLeft 10s linear infinite;
+}
+
+/* Right wave */
+.poison-bg > .wave-right {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 6px 15px at 3px 25px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 6px 15px at 3px 75px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 6px 15px at 3px 125px, rgba(34, 197, 94, 0.8) 0%, transparent 100%),
+    radial-gradient(ellipse 6px 15px at 3px 175px, rgba(34, 197, 94, 0.8) 0%, transparent 100%);
+  background-size: 6px 200px;
+  background-repeat: repeat-y;
+  animation: waveFlowRight 10s linear infinite;
+}
