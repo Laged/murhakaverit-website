@@ -17,6 +17,10 @@
   --color-keyword-location: #54e38f;
   --color-keyword-fact: #ffd36b;
   --color-keyword-important: #ff5f8f;
+
+  /* Marquee animations */
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+  --animate-marquee-vertical: marquee-vertical var(--duration, 40s) linear infinite;
 }
 
 :root {
@@ -819,4 +823,31 @@ h6 {
   border: none;
   border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent);
   margin: 2.5rem 0;
+}
+
+/* Marquee animations */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+@keyframes marquee-vertical {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(calc(-100% - var(--gap)));
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) linear infinite;
+}
+
+.animate-marquee-vertical {
+  animation: marquee-vertical var(--duration) linear infinite;
 }

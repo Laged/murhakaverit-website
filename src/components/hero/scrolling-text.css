@@ -1,0 +1,91 @@
+@layer components {
+    :root {
+        --crime-scene-duration: 20s;
+        --crime-scene-stripe-height: clamp(14px, 2.5vw, 20px);
+        --crime-scene-stripe-step: 3rem;
+        --crime-scene-padding: clamp(1.75rem, 3vw, 3.5rem);
+    }
+
+    .scrolling-text {
+        position: relative;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        width: 100%;
+        height: clamp(80px, 8vh, 120px);
+        background-color: var(--color-blood-red-dark, #5c0000);
+    }
+
+    .scrolling-text .rail {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: max-content;
+        height: 100%;
+        animation: crime-scene-loop var(--crime-scene-duration) linear infinite;
+        will-change: transform;
+    }
+
+    .scrolling-text .rail__copy {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        height: 100%;
+        padding-block: var(--crime-scene-stripe-height);
+        padding-inline: var(--crime-scene-padding);
+        white-space: nowrap;
+        font-family: "Helvetica Neue", "Arial Narrow", Arial, sans-serif;
+        font-size: clamp(0.875rem, 2.8vw, 1.4rem);
+        font-weight: 700;
+        font-stretch: condensed;
+        letter-spacing: 0.18em;
+        line-height: 1;
+        text-transform: uppercase;
+        color: #fff;
+        text-shadow: 0 0 0.25rem rgba(0, 0, 0, 0.85);
+        background-color: var(--color-blood-red-dark, #5c0000);
+    }
+
+    .scrolling-text .rail__copy::before,
+    .scrolling-text .rail__copy::after {
+        content: "";
+        position: absolute;
+        left: -12%;
+        right: -12%;
+        height: var(--crime-scene-stripe-height);
+        background: repeating-linear-gradient(
+            135deg,
+            var(--color-pure-black, #000) 0,
+            var(--color-pure-black, #000)
+                calc(var(--crime-scene-stripe-step) / 2),
+            var(--color-blood-red-dark, #5c0000)
+                calc(var(--crime-scene-stripe-step) / 2),
+            var(--color-blood-red-dark, #5c0000) var(--crime-scene-stripe-step)
+        );
+        transform: skewX(-18deg);
+        pointer-events: none;
+    }
+
+    .scrolling-text .rail__copy::before {
+        top: 0;
+    }
+
+    .scrolling-text .rail__copy::after {
+        bottom: 0;
+    }
+
+    @keyframes crime-scene-loop {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-100%);
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scrolling-text .rail {
+        animation: none;
+    }
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Marquee } from "@/components/ui/marquee";
 import "./crime-scene.css";
 
 export function CrimeScene() {
@@ -7,48 +8,12 @@ export function CrimeScene() {
 
   return (
     <div className="crime-scene">
-      <div className="crime-scene-marquee">
-        <div className="crime-scene-marquee-group">
-          <div className="crime-scene-item crime-scene-item--text">
-            <div className="crime-scene-border-top">
-              <div className="crime-scene-border-content" />
-            </div>
-            <div className="crime-scene-text">{text}</div>
-            <div className="crime-scene-border-bottom">
-              <div className="crime-scene-border-content" />
-            </div>
-          </div>
-          <div className="crime-scene-item crime-scene-item--spacer">
-            <div className="crime-scene-border-top">
-              <div className="crime-scene-border-content" />
-            </div>
-            <div className="crime-scene-text">{text}</div>
-            <div className="crime-scene-border-bottom">
-              <div className="crime-scene-border-content" />
-            </div>
-          </div>
+      <Marquee className="[--duration:20s] [--gap:3rem] h-full p-0">
+        <div className="crime-scene-section">
+          <div className="crime-scene-stripes" />
+          <span className="crime-scene-text">{text}</span>
         </div>
-        <div className="crime-scene-marquee-group" aria-hidden="true">
-          <div className="crime-scene-item crime-scene-item--text">
-            <div className="crime-scene-border-top">
-              <div className="crime-scene-border-content" />
-            </div>
-            <div className="crime-scene-text">{text}</div>
-            <div className="crime-scene-border-bottom">
-              <div className="crime-scene-border-content" />
-            </div>
-          </div>
-          <div className="crime-scene-item crime-scene-item--spacer">
-            <div className="crime-scene-border-top">
-              <div className="crime-scene-border-content" />
-            </div>
-            <div className="crime-scene-text">{text}</div>
-            <div className="crime-scene-border-bottom">
-              <div className="crime-scene-border-content" />
-            </div>
-          </div>
-        </div>
-      </div>
+      </Marquee>
     </div>
   );
 }
